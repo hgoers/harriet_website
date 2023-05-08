@@ -1,0 +1,44 @@
+[
+  {
+    "objectID": "research/trade_dependence.html",
+    "href": "research/trade_dependence.html",
+    "title": "Trade Dependence",
+    "section": "",
+    "text": "I focus on how states can use their dominant market position to extract political concessions from other states. To do this, I am developing a novel measure of trade dependence."
+  },
+  {
+    "objectID": "research/trade_dependence.html#working-papers",
+    "href": "research/trade_dependence.html#working-papers",
+    "title": "Trade Dependence",
+    "section": "Working papers",
+    "text": "Working papers\nA Novel Commodity-Level Measure of Trade Dependence.\nWhy Can’t We Be Friends? The WTO’s Role in Promoting Trade."
+  },
+  {
+    "objectID": "research/index.html",
+    "href": "research/index.html",
+    "title": "Research",
+    "section": "",
+    "text": "I am interested in dependence in the international system and its effects on non-state actors. I am particularly interested in the effect of dependence on conflict outcomes.\n\n\n\n\n\n\n\n\n\n\n\nTrade Dependence\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "blog/index.html",
+    "href": "blog/index.html",
+    "title": "Blog",
+    "section": "",
+    "text": "These posts include notes on my current research.\n\n\n\n\n\n\n\n\n\n\nInterdependence in Trade Networks\n\n\n\n\n\n\n\n\n\n\n\n\nMay 8, 2023\n\n\nHarriet Goers\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "blog/trade_dep_networks.html",
+    "href": "blog/trade_dep_networks.html",
+    "title": "Interdependence in Trade Networks",
+    "section": "",
+    "text": "I am interested in exploring states’ ability to use their dominant market share in global trade in commodities to coerce other states into acting in their interest. I have developed a new measure of trade dependence that calculates the potential cost of such coercive trade policies at the commodity level on the target.\nHowever, trade does not happen in a vacuum: states exchange goods and services in complex networks. The expected cost of trade disruptions should account for the target’s response and that of others in the trade network. To this end, I set out to develop a networked measure of the cost of coercive trade policies.\n\n\n\n\n\nThe above network shows exports in vulnerable commodities between states conducted in 2019. It’s a mess! Happily, we can focus on a subset of this network. For the purposes of this analysis, I am interested in exploring whether a potential target’s allies could impose retaliatory trade bans on an imposing state. To do this, I need to identify triangles in the network. A set of three states - A, B, and C - are in such a triangle when A is dependent on B, which is reliant on C, which is reliant on A. If this is the case, C has the opportunity and incentive to respond to A’s imposed trade ban on B: B could even pressure C through its own trade disruption.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIn my (admittedly limited) data set, I find only two triangles. Bolivia, Argentina, and Malaysia form the first. Bolivia, Argentina, and Chile form the second. The thickness of the edges represent the cost to the target of trade disruptions relative to the target’s GDP. Therefore, thicker lines represent a higher cost. This network diagram suggests that Chile could act as a deterrent to Bolivia’s policies against Argentina, but Argentina could not deter Chile from imposing its large potential cost on Bolivia."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Harriet Goers",
+    "section": "",
+    "text": "I am a PhD student in the Department of Government and Politics at the University of Maryland, College Park. I research international dependence, civil conflict, and political violence. I am interested in the drivers of tactical variation, including how third-party and external state intervention in the conflict changes groups’ incentives to use violent or non-violent tactics."
+  }
+]
