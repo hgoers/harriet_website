@@ -1,0 +1,17 @@
+{
+  "listingMap": {
+    "posts/blog_home.qmd": [
+      "posts"
+    ],
+    "posts/home.qmd": [
+      "posts"
+    ],
+    "research/index.qmd": [
+      "research",
+      "B3049D40"
+    ],
+    "blog/index.qmd": [
+      "B3049D40"
+    ]
+  }
+}

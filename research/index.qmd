@@ -1,0 +1,8 @@
+---
+title: "Research"
+page-layout: full
+listing:  
+  type: grid
+---
+
+I am interested in dependence in the international system and its effects on non-state actors. I am particularly interested in the effect of dependence on conflict outcomes.

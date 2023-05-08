@@ -1,0 +1,9 @@
+---
+title: "Blog"
+page-layout: full
+contents: blog
+listing:  
+  type: default
+---
+
+These posts include notes on my current research.

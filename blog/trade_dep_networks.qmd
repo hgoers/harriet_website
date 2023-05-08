@@ -1,0 +1,116 @@
+---
+title: "Interdependence in Trade Networks"
+author: "Harriet Goers"
+date: "May 8, 2023"
+execute: 
+  echo: false
+  message: false
+  warning: false
+---
+
+```{r}
+library(tidyverse)
+library(tidygraph)
+library(ggraph)
+```
+
+```{r}
+full_df <- read_csv("/Users/harrietgoers/Documents/dependence_trade/data/annual_dyad_dep.csv") |> 
+  transmute(reporter, partner, dep = dep*100)
+```
+
+```{r}
+reporters <- distinct(full_df, label = reporter)
+
+partners <- distinct(full_df, label = partner)
+
+nodes <- reporters |> 
+  full_join(partners, by = "label") |> 
+  rowid_to_column("id")
+```
+
+```{r}
+edges <- full_df |> 
+  left_join(nodes, by = c("reporter" = "label")) |> 
+  rename(from = id) |> 
+  left_join(nodes, by = c("partner" = "label")) |> 
+  rename(to = id) |> 
+  select(from, to, dep)
+```
+
+```{r}
+routes <- tbl_graph(nodes = nodes, edges = edges, directed = T)
+```
+
+I am interested in exploring states' ability to use their dominant market share in global trade in commodities to coerce other states into acting in their interest. I have developed a new measure of trade dependence that calculates the potential cost of such coercive trade policies at the commodity level on the target.
+
+However, trade does not happen in a vacuum: states exchange goods and services in complex networks. The expected cost of trade disruptions should account for the target's response and that of others in the trade network. To this end, I set out to develop a networked measure of the cost of coercive trade policies.
+
+```{r}
+ggraph(routes, layout = "graphopt") + 
+  geom_edge_link(aes(width = dep), alpha = 0.2) + 
+  geom_node_point() + 
+  theme_graph() + 
+  labs(edge_width = "Dependence")
+```
+
+The above network shows exports in vulnerable commodities between states conducted in 2019. It's a mess! Happily, we can focus on a subset of this network. For the purposes of this analysis, I am interested in exploring whether a potential target's allies could impose retaliatory trade bans on an imposing state. To do this, I need to identify triangles in the network. A set of three states - A, B, and C - are in such a triangle when A is dependent on B, which is reliant on C, which is reliant on A. If this is the case, C has the opportunity and incentive to respond to A's imposed trade ban on B: B could even pressure C through its own trade disruption.
+
+```{r}
+tmp <- full_df |> 
+  select(-dep) |> 
+  add_row(reporter = "Bolivia", partner = "Argentina")
+
+full_joined <- tmp |>
+  inner_join(tmp, by = c("partner" = "reporter")) |>
+  rename(a = reporter, b = partner, c = partner.y) |> 
+  inner_join(tmp, by = c("c" = "reporter")) |> 
+  rename(d = partner) |> 
+  filter(a == d)
+
+a_b_joined <- select(full_joined, reporter = a, partner = b)
+b_c_joined <- select(full_joined, reporter = b, partner = c)
+c_d_joined <- select(full_joined, reporter = c, partner = d)
+
+joined_df <- a_b_joined |> 
+  bind_rows(b_c_joined) |> 
+  bind_rows(c_d_joined) |> 
+  left_join(full_df, by = c("reporter", "partner")) |> 
+  mutate(dep = replace_na(dep, 0.003))
+```
+
+```{r}
+joined_reporters <- distinct(joined_df, label = reporter)
+
+joined_partners <- distinct(joined_df, label = partner)
+
+joined_nodes <- joined_reporters |> 
+  full_join(joined_partners, by = "label") |> 
+  rowid_to_column("id")
+```
+
+```{r}
+joined_edges <- joined_df |> 
+  left_join(joined_nodes, by = c("reporter" = "label")) |> 
+  rename(from = id) |> 
+  left_join(joined_nodes, by = c("partner" = "label")) |> 
+  rename(to = id) |> 
+  select(from, to, dep)
+```
+
+```{r}
+joined_routes <- tbl_graph(nodes = joined_nodes, edges = joined_edges, directed = T)
+```
+
+```{r}
+ggraph(joined_routes, layout = "tree") + 
+  geom_edge_link(aes(width = dep), 
+                 arrow = arrow(length = unit(4, 'mm')), 
+                 end_cap = circle(3, 'mm')) + 
+  geom_node_point() + 
+  geom_node_text(aes(label = label), repel = T) + 
+  theme_graph() + 
+  labs(edge_width = "Dependence")
+```
+
+In my (admittedly limited) data set, I find only two triangles. Bolivia, Argentina, and Malaysia form the first. Bolivia, Argentina, and Chile form the second. The thickness of the edges represent the cost to the target of trade disruptions relative to the target's GDP. Therefore, thicker lines represent a higher cost. This network diagram suggests that Chile could act as a deterrent to Bolivia's policies against Argentina, but Argentina could not deter Chile from imposing its large potential cost on Bolivia.

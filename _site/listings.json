@@ -1,0 +1,22 @@
+[
+  {
+    "listing": "/posts/blog_home.html",
+    "items": []
+  },
+  {
+    "listing": "/posts/home.html",
+    "items": []
+  },
+  {
+    "listing": "/research/index.html",
+    "items": [
+      "/research/trade_dependence.html"
+    ]
+  },
+  {
+    "listing": "/blog/index.html",
+    "items": [
+      "/blog/trade_dep_networks.html"
+    ]
+  }
+]

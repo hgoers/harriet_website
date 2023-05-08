@@ -1,0 +1,26 @@
+{
+  "index.qmd": {
+    "index.html": "923648f3"
+  },
+  "posts/home.qmd": {
+    "home.html": "d0a9d5b6"
+  },
+  "posts/osp.qmd": {
+    "osp.html": "c5a79063"
+  },
+  "research/index.qmd": {
+    "index.html": "23395d06"
+  },
+  "research/trade_dependence.qmd": {
+    "trade_dependence.html": "c64dc397"
+  },
+  "about.qmd": {
+    "about.html": "ccb394cd"
+  },
+  "blog/index.qmd": {
+    "index.html": "fe8c7ab6"
+  },
+  "blog/trade_dep_networks.qmd": {
+    "trade_dep_networks.html": "cbffb322"
+  }
+}

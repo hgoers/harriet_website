@@ -1,0 +1,8 @@
+<style>
+body {
+  background-image: url('img/fred-williams-avenel-1973.jpeg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+</style>

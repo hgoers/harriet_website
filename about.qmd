@@ -1,0 +1,11 @@
+---
+page-layout: full
+---
+
+::: {layout-ncol=2}
+
+![](img/avatar.jpeg)
+
+I am a PhD student in the [Department of Government and Politics](https://gvpt.umd.edu/) at the [University of Maryland, College Park](https://www.umd.edu/). I research international dependence, civil conflict, and political violence. I am interested in the drivers of tactical variation, including how third-party and external state intervention in the conflict changes groups' incentives to use violent or non-violent tactics.
+
+:::

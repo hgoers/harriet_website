@@ -1,0 +1,16 @@
+{
+  "hash": "fcf9690b575bf993f011ea4dbd6c63c7",
+  "result": {
+    "markdown": "---\ntitle: \"Interdependence in Trade Networks\"\nauthor: \"Harriet Goers\"\ndate: \"May 8, 2023\"\nexecute: \n  echo: false\n  message: false\n  warning: false\n---\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n\nI am interested in exploring states' ability to use their dominant market share in global trade in commodities to coerce other states into acting in their interest. I have developed a new measure of trade dependence that calculates the potential cost of such coercive trade policies at the commodity level on the target.\n\nHowever, trade does not happen in a vacuum: states exchange goods and services in complex networks. The expected cost of trade disruptions should account for the target's response and that of others in the trade network. To this end, I set out to develop a networked measure of the cost of coercive trade policies.\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](trade_dep_networks_files/figure-html/unnamed-chunk-6-1.png){width=672}\n:::\n:::\n\n\nThe above network shows exports in vulnerable commodities between states conducted in 2019. It's a mess! Happily, we can focus on a subset of this network. For the purposes of this analysis, I am interested in exploring whether a potential target's allies could impose retaliatory trade bans on an imposing state. To do this, I need to identify triangles in the network. A set of three states - A, B, and C - are in such a triangle when A is dependent on B, which is reliant on C, which is reliant on A. If this is the case, C has the opportunity and incentive to respond to A's imposed trade ban on B: B could even pressure C through its own trade disruption.\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n::: {.cell-output-display}\n![](trade_dep_networks_files/figure-html/unnamed-chunk-11-1.png){width=672}\n:::\n:::\n\n\nIn my (admittedly limited) data set, I find only two triangles. Bolivia, Argentina, and Malaysia form the first. Bolivia, Argentina, and Chile form the second. The thickness of the edges represent the cost to the target of trade disruptions relative to the target's GDP. Therefore, thicker lines represent a higher cost. This network diagram suggests that Chile could act as a deterrent to Bolivia's policies against Argentina, but Argentina could not deter Chile from imposing its large potential cost on Bolivia.\n",
+    "supporting": [
+      "trade_dep_networks_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
