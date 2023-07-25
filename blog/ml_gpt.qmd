@@ -1,0 +1,129 @@
+---
+title: "Using GPT to Classify News Articles in R"
+author: "Harriet Goers"
+date: "July 18, 2023"
+draft: true
+execute: 
+  echo: true
+  message: false
+  warning: false
+---
+
+I am helping out on a project that looks at trends in international mediation across a set of self-determination disputes. We are building a data set of mediation events for each dispute. Like many event data sets, our data come from news articles.
+
+To help with this project, I am using OpenAI's GPT 3.5 Turbo model to detect whether a news article mentions a mediation event. This post steps through how I do this in R.
+
+## Set up
+
+To do this, you will need to use the following packages:
+
+```{r}
+library(httr2)
+library(glue)
+```
+
+You will need an OpenAI API key to run these models. You can generate one and add credits to your account at <https://platform.openai.com/account/api-keys>.
+
+You will need to reference this API key in your query. I prefer to store my API keys in my system environment. For example:
+
+```{r}
+Sys.setenv("OPENAI_API_KEY" = "XXXXXXXXXXXXXXXXXXXX")
+```
+
+You can then easily access your key without hard coding it into your script:
+
+```{r}
+Sys.getenv("OPENAI_API_KEY")
+```
+
+You are now ready to build your query.
+
+## Working with OpenAI's API
+
+First, select your news article. For example, here is a news article that may reference a mediation event:
+
+```{r}
+text <- "luo gan, secretary general of the state council, left here by air this morning at the head of a chinese government delegation on a goodwill visit to zimbabwe and myanmar.  at the invitation of the governments of the two countries.  the delegation will also attend celebration ceremonies for the completion and transfer of two projects there.  among those seeing the delegation off at the airport were he chunlin, deputy secretary general of the state council, yang fuchang, vice-foreign minister, wang wendong, vice-minister of foreign economic relations and trade, and diplomatic envoys of zimbabwe and myanmar to china."
+
+text
+```
+
+You then feed this text into your prompt. You will need to experiment with various prompts to determine which produces the best predictions given your research question. After testing a couple of different prompts, I found this rather verbose one to be the best at identifying mediation events.
+
+```{r}
+prompt <- glue("Identify with 'yes' or 'no' whether the following article (delimited in XML tags) mentions a meeting or event involving representatives of at least two countries, or of at least one country and organization, in which they discuss a conflict involving at least one of those countries: <article>{text}</article>")
+```
+
+Feeding the news article text into this prompt gives us:
+
+```{r}
+prompt
+```
+
+Next, you need to build your API request. We can take advantage of `httr2` to do this.
+
+```{r}
+#| eval: false
+
+req <- request("https://api.openai.com/v1/chat/completions") |>
+    req_headers("Content-Type" = "application/json",
+                "Authorization" = paste("Bearer", Sys.getenv("OPENAI_API_KEY"))) |>
+    req_body_json(
+      list(
+        "model" = "gpt-3.5-turbo-0613",
+        "messages" = list(
+          list(
+            "role" = "system",
+            "content" = "You are a helpful assistant."
+          ),
+          list(
+            "role" = "user",
+            "content" = prompt
+          )
+        ),
+        "temperature" = 0,
+        "max_tokens" = 1
+      )
+    ) |>
+    req_retry(max_tries = 3)
+```
+
+```{r}
+#| echo: false
+
+req <- request("https://api.openai.com/v1/chat/completions") |>
+    req_headers("Content-Type" = "application/json",
+                "Authorization" = paste("Bearer", Sys.getenv("OPENAI_API_KEY_NSF"))) |>
+    req_body_json(
+      list(
+        "model" = "gpt-3.5-turbo-0613",
+        "messages" = list(
+          list(
+            "role" = "system",
+            "content" = "You are a helpful assistant."
+          ),
+          list(
+            "role" = "user",
+            "content" = prompt
+          )
+        ),
+        "temperature" = 0,
+        "max_tokens" = 1
+      )
+    ) |>
+    req_retry(max_tries = 3)
+```
+
+Finally, you can perform your request:
+
+```{r}
+resp <- req_perform(req)
+
+resp
+```
+
+You can extract the prediction from this response:
+
+```{r}
+resp_body_json(resp)$choices[[1]]$message$content
+```

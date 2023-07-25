@@ -1,0 +1,8 @@
+---
+title: "ML-Assisted Events Data Coding"
+image: "img/4fd3f53e-611f-4781-b3ce-4212294abccb.jpeg"
+---
+
+I am working on a number of projects to help teams of researchers incorporate machine-learning models into their events data coding. I have had the most success using GPT models to help locate relevant news articles and to extract relevant details from those relevant news articles.
+
+I have also produced a number of Shiny applications that help speed up human coding or verification of ML-models' outputs and reduce human error.

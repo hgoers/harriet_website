@@ -1,13 +1,6 @@
 ---
 title: "Trade Dependence"
+image: "img/b1630aa1-4f33-4a1a-9845-5e02cef039dc.jpeg"
 ---
 
-## Research interest
-
-I focus on how states can use their dominant market position to extract political concessions from other states. To do this, I am developing a novel measure of trade dependence.
-
-## Working papers
-
-*A Novel Commodity-Level Measure of Trade Dependence.*
-
-*Why Can't We Be Friends? The WTO's Role in Promoting Trade.*
+I am interested in exploring how trade dependence between states changes their behaviour. I am currently focused on developing a new measure of bilateral trade dependence that better reflects the costs states face when trade disruptions are threatened.

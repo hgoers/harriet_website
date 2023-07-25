@@ -1,0 +1,10 @@
+---
+title: "Teaching"
+page-layout: full
+listing: 
+  type: grid
+  contents: 
+    - "intro_to_r.qmd"
+---
+
+This semester, I am teaching an intensive course introducing incoming PhD students to the R programming language. I am also working as the Teaching Assistant for *GVPT622: Quantitative Methods for Political Science*.

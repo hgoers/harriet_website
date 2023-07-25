@@ -6,4 +6,4 @@ listing:
   type: default
 ---
 
-These posts include notes on my current research.
+These posts include notes on my current research and reminders on how to do things in R.

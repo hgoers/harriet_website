@@ -1,0 +1,8 @@
+---
+title: "Introduction to R for Political Science"
+image: "img/hex-testudo.png"
+---
+
+*Learn to use data science tools to support your research.*
+
+[Teaching materials](https://hgoers.github.io/intro_to_r_ps/)

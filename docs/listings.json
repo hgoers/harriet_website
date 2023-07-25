@@ -2,13 +2,18 @@
   {
     "listing": "/research/index.html",
     "items": [
+      "/research/ml_coding.html",
       "/research/trade_dependence.html"
     ]
   },
   {
     "listing": "/blog/index.html",
+    "items": []
+  },
+  {
+    "listing": "/teaching/index.html",
     "items": [
-      "/blog/trade_dep_networks.html"
+      "/teaching/intro_to_r.html"
     ]
   }
 ]

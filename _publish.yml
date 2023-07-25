@@ -1,0 +1,4 @@
+- source: project
+  netlify:
+    - id: ae5d4d4b-a2c1-4cfb-b104-066169ab2fdd
+      url: 'https://brilliant-sorbet-ac0f17.netlify.app'

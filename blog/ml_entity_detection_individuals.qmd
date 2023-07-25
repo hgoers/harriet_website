@@ -1,0 +1,201 @@
+---
+title: "Entity Detection - Individuals"
+author: "Harriet Goers"
+date: "July 18, 2023"
+draft: true
+execute: 
+  echo: true
+  message: false
+  warning: false
+---
+
+I would like to be able to identify all individuals and organisations mentioned in relevant news articles.
+
+For example, from this article:
+
+```{r}
+text <- "luo gan, secretary general of the state council, left here by air this morning at the head of a chinese government delegation on a goodwill visit to zimbabwe and myanmar.  at the invitation of the governments of the two countries.  the delegation will also attend celebration ceremonies for the completion and transfer of two projects there.  among those seeing the delegation off at the airport were he chunlin, deputy secretary general of the state council, yang fuchang, vice-foreign minister, wang wendong, vice-minister of foreign economic relations and trade, and diplomatic envoys of zimbabwe and myanmar to china."
+
+text
+```
+
+I would like to produce:
+
+```{r}
+#| echo: false
+
+tibble::tibble(
+  full_name = c("luo gan", 
+                "he chunlin", 
+                "yang fuchang", 
+                "wang wendong"),
+  position = c("secretary general of the state council",
+               "deputy secretary general of the state council",
+               "vice-foreign minister",
+               "vice-minister of foreign economic relations and trade")
+)
+```
+
+## GPT 3.5 models
+
+```{r}
+library(httr2)
+library(tidyverse)
+```
+
+### Chat completion
+
+First, let's see how well a simple chat completion using GPT 3.5 Turbo does.
+
+```{r}
+prompt <- glue::glue("Identify all individuals and their official titles mentioned in the following article (delimited in XML tags). Provide their full name and then provide their official titles in parenthesis. <article>{text}</article>")
+
+prompt
+```
+
+```{r}
+req <- request("https://api.openai.com/v1/chat/completions") |>
+    req_headers("Content-Type" = "application/json",
+                "Authorization" = paste("Bearer", Sys.getenv("OPENAI_API_KEY_NSF"))) |>
+    req_body_json(
+      list(
+        "model" = "gpt-3.5-turbo-0613",
+        "messages" = list(
+          list(
+            "role" = "system",
+            "content" = "You are a helpful assistant."
+          ),
+          list(
+            "role" = "user",
+            "content" = prompt
+          )
+        ),
+        "temperature" = 0
+      )
+    ) |>
+    req_retry(max_tries = 3)
+```
+
+```{r}
+resp <- req_perform(req)
+
+resp
+```
+
+Let's look at the results:
+
+```{r}
+resp_body_json(resp)$choices[[1]]$message$content
+```
+
+I can then clean these up to get the desired results:
+
+```{r}
+resp_body_json(resp)$choices[[1]]$message$content |> 
+  as_tibble() |> 
+  separate_rows(value, sep = "\n") |> 
+  transmute(position = str_extract(value, "\\(.*\\)"),
+            position = str_remove_all(position, "\\(|\\)"),
+            full_name = str_remove_all(value, "- | \\(.*\\)"))
+```
+
+### Function calling
+
+```{r}
+library(httr2)
+library(jsonlite)
+```
+
+First, we need to provide the model with a dummy function:
+
+```{r}
+extract_data <- function(text) {
+
+    named_individuals <- list(
+      list(
+        "full_name" = "Harriet Goers",
+        "position" = "Student"
+      ),
+      list(
+        "full_name" = "Jane Doe",
+        "position" = "Secretary General"
+      )
+    )
+
+    toJSON(named_individuals)
+
+}
+```
+
+Then we need to craft our prompt:
+
+```{r}
+prompt <- glue::glue("Identify all individuals and their official titles mentioned in the following article (delimited in XML tags): <article>{text}</article>")
+
+prompt
+```
+
+Then we need to build our messages parameter:
+
+```{r}
+messages <- list(
+    list("role" = "user", "content" = prompt)
+)
+```
+
+And our function parameter:
+
+```{r}
+functions <- list(
+    list(
+      "name" = "extract_data",
+      "description" = "Extract details about individuals mentioned in a news article.",
+      "parameters" = list(
+        "type" = "object",
+        "properties" = list(
+          "individuals" = list(
+            "type" = "array",
+            "items" = list(
+              "type" = "string"
+            ),
+            "description"  = "List the individual's full name and position or job title"
+          )
+        ),
+        "required" = list("individuals")
+      )
+    )
+  )
+```
+
+Now we can build our request:
+
+```{r}
+req <- request("https://api.openai.com/v1/chat/completions") |>
+    req_headers("Content-Type" = "application/json",
+                "Authorization" = paste("Bearer", Sys.getenv("OPENAI_API_KEY_NSF"))) |>
+    req_body_json(
+      list(
+        "model" = "gpt-3.5-turbo-0613",
+        "messages" = messages,
+        "functions" = functions,
+        "function_call" = "auto"
+      )
+    ) |>
+    req_retry(max_tries = 3)
+```
+
+And perform it:
+
+```{r}
+resp <- req_perform(req)
+
+resp
+```
+
+Let's see how it did:
+
+```{r}
+function_args <- fromJSON(resp_body_json(resp)$choices[[1]]$message$function_call$arguments[1])
+
+function_args
+```

@@ -1,8 +1,10 @@
+```{=html}
 <style>
 body {
-  background-image: url('img/fred-williams-avenel-1973.jpeg');
+  background-image: url('img/01080b88-5143-446d-a41f-4e51d8e158b5.jpeg');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
 }
 </style>
+```

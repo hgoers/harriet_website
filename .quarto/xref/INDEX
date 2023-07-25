@@ -22,5 +22,29 @@
   },
   "blog/trade_dep_networks.qmd": {
     "trade_dep_networks.html": "cbffb322"
+  },
+  "research/ml_coding.qmd": {
+    "ml_coding.html": "bf7f8996"
+  },
+  "teaching/index.qmd": {
+    "index.html": "fa65985b"
+  },
+  "teaching/intro_to_r.qmd": {
+    "intro_to_r.html": "35a3659a"
+  },
+  "teaching/gvpt622.qmd": {
+    "gvpt622.html": "53f68b6b"
+  },
+  "blog/ml_entity_detection.qmd": {
+    "ml_entity_detection.html": "dbe8abba"
+  },
+  "blog/ml_gpt.qmd": {
+    "ml_gpt.html": "ee2660d1"
+  },
+  "blog/ml_entity_detection_orgs.qmd": {
+    "ml_entity_detection_orgs.html": "0926f23e"
+  },
+  "blog/ml_entity_detection_individuals.qmd": {
+    "ml_entity_detection_individuals.html": "7ff7f723"
   }
 }
