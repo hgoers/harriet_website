@@ -1,8 +1,9 @@
 ---
 page-layout: full
 ---
+
 ::: {layout-ncol="2"}
 ![](img/avatar.jpeg)
 
-I am a PhD student in the [Department of Government and Politics](https://gvpt.umd.edu/) at the [University of Maryland, College Park](https://www.umd.edu/). I research international dependence, civil conflict, and political violence. I am interested in the drivers of tactical variation, including how third-party and external state intervention in the conflict changes groups' incentives to use violent or non-violent tactics. <br><br> Prior to starting my PhD, I worked on the [Global Peace Index](https://www.visionofhumanity.org/maps/#/) with the [Institute for Economics and Peace](https://www.economicsandpeace.org/), as an analyst with the Australian Department of Defence, and on the [Asia Power Index](https://power.lowyinstitute.org/) with the [Lowy Institute](https://www.lowyinstitute.org/).  
+I am a PhD student in the [Department of Government and Politics](https://gvpt.umd.edu/) at the [University of Maryland, College Park](https://www.umd.edu/). I research international dependence, civil conflict, and political violence. I am interested in the drivers of tactical variation, including how third-party and external state intervention in the conflict changes rebel groups' incentives to use violent or non-violent tactics. <br><br> Prior to starting my PhD, I worked on the [Global Peace Index](https://www.visionofhumanity.org/maps/#/) with the [Institute for Economics and Peace](https://www.economicsandpeace.org/), as an analyst with the Australian Department of Defence, and on the [Asia Power Index](https://power.lowyinstitute.org/) with the [Lowy Institute](https://www.lowyinstitute.org/).
 :::

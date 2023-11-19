@@ -1,10 +1,30 @@
 ---
 title: "Teaching"
 page-layout: full
-listing: 
-  type: grid
-  contents: 
-    - "intro_to_r.qmd"
 ---
 
-This semester, I am teaching an intensive course introducing incoming PhD students to the R programming language. I am also working as the Teaching Assistant for *GVPT622: Quantitative Methods for Political Science*.
+## Fall 2023
+
+::: grid
+::: g-col-2
+![](img/hex-testudo.png){fig-align="center" width="100"}
+:::
+
+::: g-col-10
+### [GVPT622: Quantitative Methods for Political Science](https://hgoers.github.io/GVPT622/)
+
+An introduction to research methods and quantitative research in political science.
+:::
+:::
+
+::: grid
+::: g-col-2
+![](img/hex-testudo.png){fig-align="center" width="100"}
+:::
+
+::: g-col-10
+### [Introduction to R for Political Scientists](https://hgoers.github.io/intro_to_r_ps/)
+
+Learn to use data science tools to support your research.
+:::
+:::

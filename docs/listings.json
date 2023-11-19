@@ -5,15 +5,5 @@
       "/research/ml_coding.html",
       "/research/trade_dependence.html"
     ]
-  },
-  {
-    "listing": "/blog/index.html",
-    "items": []
-  },
-  {
-    "listing": "/teaching/index.html",
-    "items": [
-      "/teaching/intro_to_r.html"
-    ]
   }
 ]

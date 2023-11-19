@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.3.433">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -55,7 +55,8 @@ ul.task-list li input[type="checkbox"] {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
@@ -98,8 +99,8 @@ ul.task-list li input[type="checkbox"] {
   </li>  
 </ul>
             <div class="quarto-navbar-tools ms-auto">
-    <a href="mailto:hgoers@umd.edu" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-envelope"></i></a>
-    <a href="https://github.com/hgoers" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+    <a href="mailto:hgoers@umd.edu" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-envelope"></i></a>
+    <a href="https://github.com/hgoers" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -110,7 +111,14 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#working-papers" id="toc-working-papers" class="nav-link active" data-scroll-target="#working-papers">Working papers</a></li>
+  <li><a href="#presentations" id="toc-presentations" class="nav-link" data-scroll-target="#presentations">Presentations</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -134,8 +142,20 @@ ul.task-list li input[type="checkbox"] {
 
 <p>I am working on a number of projects to help teams of researchers incorporate machine-learning models into their events data coding. I have had the most success using GPT models to help locate relevant news articles and to extract relevant details from those relevant news articles.</p>
 <p>I have also produced a number of Shiny applications that help speed up human coding or verification of ML-models’ outputs and reduce human error.</p>
+<section id="working-papers" class="level3">
+<h3 class="anchored" data-anchor-id="working-papers">Working papers</h3>
+<p><em>Coding with the machines: machine-assisted coding of rare event data</em>, with Johanna Birnir, Ernesto Calvo, Keith Chew, Jordan Dewar, Roman Hlatky, Amy Liu, Henry Overos, and Ojashwi Pathak.</p>
+<p>While machine coding of data has dramatically advanced in recent years, we do not know the relative performance of supervised and semi-supervised algorithms when coding political data – especially when compared to human coding. In this note, we juxtapose (1) a semi-supervised dictionary-based classifier with (2) an out-of-the-box GPT 4 model and (3) a fine-tuned BERT transformer – and compare all three to human coding of rare events data. We find that the transformer models outperform the bag-of-words approach, especially when fine tuned. None of the models beat human coding – but only in well-known contexts. Our results, however, suggest that the transformers do better than humans in less familiar contexts and that with additional training they can rapidly close the remaining gap to humans. We conclude by discussing the benefits and drawbacks of machine coding.</p>
+</section>
+<section id="presentations" class="level3">
+<h3 class="anchored" data-anchor-id="presentations">Presentations</h3>
+<section id="umd-methods-workshop-fall-2023" class="level4">
+<h4 class="anchored" data-anchor-id="umd-methods-workshop-fall-2023"><a href="https://rpubs.com/harrietgoers/1116955">UMD Methods Workshop (Fall 2023)</a></h4>
+<p>Do you research political events, including protests,&nbsp;mediation, voting, or sanctions? Our traditional method for collecting these events data involves reading thousands of news articles to extract the relevant information and put it into a dataset that we can use for our analysis. This process is very time-consuming and can be prone to error. Happily, advanced large language models, including GPT, can assist us. These models are easy to use in R and can be seamlessly&nbsp;integrated into your data collection process. I will step through how to use out-of-the-box GPT models in R to extract useful information from news articles. You can use these models to extract information from thousands of news articles in mere minutes.</p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

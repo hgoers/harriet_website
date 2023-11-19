@@ -4,3 +4,7 @@ image: "img/b1630aa1-4f33-4a1a-9845-5e02cef039dc.jpeg"
 ---
 
 I am interested in exploring how trade dependence between states changes their behaviour. I am currently focused on developing a new measure of bilateral trade dependence that better reflects the costs states face when trade disruptions are threatened.
+
+### Working Papers
+
+*Plenty of Fish in the Sea: A New Approach to Measuring Trade Dependence*
