@@ -4,6 +4,7 @@ project:
 
 website:
   title: "Harriet Goers"
+  google-analytics: "G-MWQWNJ6WK8"
   navbar:
     background: "light"
     left:
@@ -15,8 +16,6 @@ website:
         href: research/index.qmd
       - text: Teaching
         href: teaching/index.qmd
-#      - text: Blog
-#        href: blog/index.qmd
     tools:
       - icon: envelope
         href: "mailto:hgoers@umd.edu"
