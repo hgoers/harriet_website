@@ -15,6 +15,6 @@ While machine coding of data has dramatically advanced in recent years, we do no
 
 ### Presentations
 
-#### [UMD Methods Workshop (Fall 2023)](https://rpubs.com/harrietgoers/1116955)
+#### [UMD Methods Workshop (Fall 2023)](https://github.com/gsa-gvpt/gvpt-methods/tree/de62edc60b0176ff0b6677e4511f951c9a837a53/usinggpt)
 
 Do you research political events, including protests, mediation, voting, or sanctions? Our traditional method for collecting these events data involves reading thousands of news articles to extract the relevant information and put it into a dataset that we can use for our analysis. This process is very time-consuming and can be prone to error. Happily, advanced large language models, including GPT, can assist us. These models are easy to use in R and can be seamlessly integrated into your data collection process. I will step through how to use out-of-the-box GPT models in R to extract useful information from news articles. You can use these models to extract information from thousands of news articles in mere minutes.
