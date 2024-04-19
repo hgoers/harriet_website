@@ -3,6 +3,20 @@ title: "Teaching"
 page-layout: full
 ---
 
+## Spring 2024
+
+::: grid
+::: g-col-2
+![](img/hex-testudo.png){fig-align="center" width="100"}
+:::
+
+::: g-col-10
+### [GVPT722: Advanced Quantitative Methods for Political Science](https://hgoers.github.io/GVPT722/)
+
+An introduction to multivariate analysis.
+:::
+:::
+
 ## Fall 2023
 
 ::: grid
