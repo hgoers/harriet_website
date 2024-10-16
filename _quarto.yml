@@ -8,8 +8,6 @@ website:
   navbar:
     background: "light"
     left:
-      - text: Home
-        href: index.qmd
       - text: About
         href: about.qmd        
       - text: Research
@@ -21,6 +19,8 @@ website:
         href: "mailto:hgoers@umd.edu"
       - icon: github
         href: https://github.com/hgoers
+      - icon: mortarboard-fill
+        href: https://scholar.google.com/citations?user=BHZXR-JIB_EC&hl=en
         
 
 format:

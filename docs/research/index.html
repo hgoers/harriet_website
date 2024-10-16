@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Harriet Goers - Research</title>
+<title>Research – Harriet Goers</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -47,7 +47,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -56,6 +62,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -100,8 +107,35 @@ gtag('js', new Date());
 gtag('config', 'G-MWQWNJ6WK8', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -110,41 +144,38 @@ gtag('config', 'G-MWQWNJ6WK8', { 'anonymize_ip': true});
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Harriet Goers</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html" rel="" target="">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link active" href="../research/index.html" aria-current="page"> 
+<span class="menu-text">Research</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../research/index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Research</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../teaching/index.html" rel="" target="">
- <span class="menu-text">Teaching</span></a>
+    <a class="nav-link" href="../teaching/index.html"> 
+<span class="menu-text">Teaching</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools ms-auto">
-    <a href="mailto:hgoers@umd.edu" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-envelope"></i></a>
-    <a href="https://github.com/hgoers" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
-</div>
           </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools tools-wide">
+    <a href="mailto:hgoers@umd.edu" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-envelope"></i></a>
+    <a href="https://github.com/hgoers" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+    <a href="https://scholar.google.com/citations?user=BHZXR-JIB_EC&amp;hl=en" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-mortarboard-fill"></i></a>
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -152,11 +183,24 @@ gtag('config', 'G-MWQWNJ6WK8', { 'anonymize_ip': true});
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#published-and-working-papers" id="toc-published-and-working-papers" class="nav-link active" data-scroll-target="#published-and-working-papers">Published and working papers</a>
+  <ul class="collapse">
+  <li><a href="#internal-drivers-of-self-rule-referendums-2024" id="toc-internal-drivers-of-self-rule-referendums-2024" class="nav-link" data-scroll-target="#internal-drivers-of-self-rule-referendums-2024">Internal drivers of self-rule referendums (2024)</a></li>
+  <li><a href="#coding-with-the-machines-machine-assisted-coding-of-rare-event-data-2024" id="toc-coding-with-the-machines-machine-assisted-coding-of-rare-event-data-2024" class="nav-link" data-scroll-target="#coding-with-the-machines-machine-assisted-coding-of-rare-event-data-2024">Coding with the machines: machine-assisted coding of rare event data (2024)</a></li>
+  <li><a href="#plenty-of-fish-in-the-sea-working-paper" id="toc-plenty-of-fish-in-the-sea-working-paper" class="nav-link" data-scroll-target="#plenty-of-fish-in-the-sea-working-paper">Plenty of Fish in the Sea (working paper)</a></li>
+  <li><a href="#tactics-of-survival-strategies-of-resistance-data-project-update-forthcoming" id="toc-tactics-of-survival-strategies-of-resistance-data-project-update-forthcoming" class="nav-link" data-scroll-target="#tactics-of-survival-strategies-of-resistance-data-project-update-forthcoming">Tactics of Survival: Strategies of Resistance Data Project Update (forthcoming)</a></li>
+  </ul></li>
+  <li><a href="#research-areas" id="toc-research-areas" class="nav-link" data-scroll-target="#research-areas">Research areas</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -165,7 +209,7 @@ gtag('config', 'G-MWQWNJ6WK8', { 'anonymize_ip': true});
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page-left">
 
     
   
@@ -173,27 +217,56 @@ gtag('config', 'G-MWQWNJ6WK8', { 'anonymize_ip': true});
   </div>
   
 
+
 </header>
 
+
 <p>I am interested in dependence between countries and its effects on non-state actors. I am particularly interested in the effect of dependence on conflict outcomes.</p>
+<section id="published-and-working-papers" class="level2">
+<h2 class="anchored" data-anchor-id="published-and-working-papers">Published and working papers</h2>
+<section id="internal-drivers-of-self-rule-referendums-2024" class="level3">
+<h3 class="anchored" data-anchor-id="internal-drivers-of-self-rule-referendums-2024">Internal drivers of self-rule referendums (2024)</h3>
+<p>In <em>Conflict Management and Peace Science</em></p>
+<p>With Kathleen Gallagher Cunningham, and Laia Balcells</p>
+<p>From Catalonia to Kurdistan to Scotland, referendums have increasingly become popular strategies of self-rule movements. Despite this, many referendums are considered failures by the movements (revealing a dearth of support), some are marred by violence, and few garner external backing. Given this, when are they likely to be employed? We argue that internal competition serves as one driving force for actors to use referendums as a way to gain or uphold status within the movement. Using novel data and two case studies, we highlight the ways these movements arrive at a vote for self-rule, underscoring the role of internal competition.</p>
+</section>
+<section id="coding-with-the-machines-machine-assisted-coding-of-rare-event-data-2024" class="level3">
+<h3 class="anchored" data-anchor-id="coding-with-the-machines-machine-assisted-coding-of-rare-event-data-2024">Coding with the machines: machine-assisted coding of rare event data (2024)</h3>
+<p>In <em>Proceedings of the National Academy of Sciences of the United States of America</em></p>
+<p>With Henry David Overos, Roman Hlatky, Ojashwi Pathak, Jordan Gouws-Dewar, Katy Smith, Keith Padraic Chew, Jóhanna K Birnir, and Amy H Liu</p>
+<p>While machine coding of data has dramatically advanced in recent years, the literature raises significant concerns about validation of LLM classification showing, for example, that reliability varies greatly by prompt and temperature tuning, across subject areas and tasks—especially in “zero-shot” applications. This paper contributes to the discussion of validation in several different ways. To test the relative performance of supervised and semi-supervised algorithms when coding political data, we compare three models’ performances to each other over multiple iterations for each model and to trained expert coding of data. We also examine changes in performance resulting from prompt engineering and pre-processing of source data. To ameliorate concerns regarding LLM’s pre-training on test data, we assess performance by updating an existing dataset beyond what is publicly available. Overall, we find that only GPT-4 approaches trained expert coders when coding contexts familiar to human coders and codes more consistently across contexts. We conclude by discussing some benefits and drawbacks of machine coding moving forward.</p>
+</section>
+<section id="plenty-of-fish-in-the-sea-working-paper" class="level3">
+<h3 class="anchored" data-anchor-id="plenty-of-fish-in-the-sea-working-paper">Plenty of Fish in the Sea (working paper)</h3>
+<p>This paper examines how how third-party states’ ability to fill trade gaps left by economic sanctions influences whether sanctions are imposed in the first place. It argues that sanctions are less likely when the target state can easily find alternative markets for the specific goods being restricted, as this undermines the sanctions’ effectiveness. By focusing on product-specific trade networks, rather than broad economic ties, the study offers a more nuanced understanding of when and why sanctions are used. This research is important as it sheds light on why some states evade sanctions and highlights the importance of global trade networks in shaping economic statecraft. The findings have significant implications for how states wield sanctions to achieve geopolitical goals in an interconnected world.</p>
+</section>
+<section id="tactics-of-survival-strategies-of-resistance-data-project-update-forthcoming" class="level3">
+<h3 class="anchored" data-anchor-id="tactics-of-survival-strategies-of-resistance-data-project-update-forthcoming">Tactics of Survival: Strategies of Resistance Data Project Update (forthcoming)</h3>
+<p>With Kathleen Cunningham, Ted Ellsworth, Michael Cowan, Oja Pathak, and Ellin Chung</p>
+<p>This data feature presents the updated Strategies of Resistance Datas Project (SRDP), which provides organization-level data on duration of claim-making activity, violent and nonviolent tactics, demands over self-determination, and accommodations by the state. In the original data release, key comparisons were drawn between uses of mass nonviolence and smaller-scale nonviolent tactics, highlighting how common nonviolent direct action is, the extent to which it co-occurs with violence, and what we miss by examining only mass nonviolent campaigns. In the update, which includes new organizational-level data to 2020, we demonstrate how these data can be leveraged to understand and uniquely test hypotheses about organizational survival. Evaluating a set of hypotheses about the correlates of organizational survival drawn from the literature, we find that nonviolent tactical diversity is associated with longer survival and accommodation of the self-determination movements is associated with quicker exit.</p>
+</section>
+</section>
+<section id="research-areas" class="level2">
+<h2 class="anchored" data-anchor-id="research-areas">Research areas</h2>
 
 
 
+</section>
 
 <div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-listing-file-modified-sort="1701282552628" data-listing-reading-time-sort="2">
+<div class="g-col-1" data-index="0" data-listing-file-modified-sort="1701282552628" data-listing-reading-time-sort="2" data-listing-word-count-sort="351">
 <a href="../research/ml_coding.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
-<img src="../research/img/4fd3f53e-611f-4781-b3ce-4212294abccb.jpeg" class="thumbnail-image card-img" style="height: 150px;">
+<img loading="lazy" src="../research/img/4fd3f53e-611f-4781-b3ce-4212294abccb.jpeg" class="thumbnail-image card-img" style="height: 150px;">
 </p>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
 ML-Assisted Events Data Coding
 </h5>
 <div class="card-text listing-description">
-I am working on a number of projects to help teams of researchers incorporate machine-learning models…
+I am working on a number of projects to help teams of researchers incorporate machine-learning models into their events data coding. I have had the most success using GPT…
 </div>
 <div class="card-attribution card-text-small start">
 <div class="listing-author">
@@ -204,18 +277,18 @@ I am working on a number of projects to help teams of researchers incorporate ma
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="1" data-listing-file-modified-sort="1700422018153" data-listing-reading-time-sort="1">
+<div class="g-col-1" data-index="1" data-listing-file-modified-sort="1700422018153" data-listing-reading-time-sort="1" data-listing-word-count-sort="50">
 <a href="../research/trade_dependence.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
-<img src="../research/img/b1630aa1-4f33-4a1a-9845-5e02cef039dc.jpeg" class="thumbnail-image card-img" style="height: 150px;">
+<img loading="lazy" src="../research/img/b1630aa1-4f33-4a1a-9845-5e02cef039dc.jpeg" class="thumbnail-image card-img" style="height: 150px;">
 </p>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
 Trade Dependence
 </h5>
 <div class="card-text listing-description">
-I am interested in exploring how trade dependence between states changes…
+I am interested in exploring how trade dependence between states changes their behaviour. I am currently focused on developing a new measure of bilateral trade dependence…
 </div>
 <div class="card-attribution card-text-small start">
 <div class="listing-author">
@@ -266,18 +339,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -309,11 +371,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -323,8 +424,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -336,7 +446,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -380,6 +613,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -405,6 +639,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -465,6 +725,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 

@@ -4,28 +4,42 @@
     "href": "teaching/index.html",
     "title": "Teaching",
     "section": "",
-    "text": "An introduction to multivariate analysis."
+    "text": "An introduction to research methods and quantitative research in political science.\n\n\n\n\n\n\n\n\n\n\n\n\nLearn to use data science tools to support your research."
+  },
+  {
+    "objectID": "teaching/index.html#fall-2024-and-2023",
+    "href": "teaching/index.html#fall-2024-and-2023",
+    "title": "Teaching",
+    "section": "",
+    "text": "An introduction to research methods and quantitative research in political science.\n\n\n\n\n\n\n\n\n\n\n\n\nLearn to use data science tools to support your research."
   },
   {
     "objectID": "teaching/index.html#spring-2024",
     "href": "teaching/index.html#spring-2024",
     "title": "Teaching",
-    "section": "",
-    "text": "An introduction to multivariate analysis."
-  },
-  {
-    "objectID": "teaching/index.html#fall-2023",
-    "href": "teaching/index.html#fall-2023",
-    "title": "Teaching",
-    "section": "Fall 2023",
-    "text": "Fall 2023\n\n\n\n\n\n\n\n\n\nGVPT622: Quantitative Methods for Political Science\nAn introduction to research methods and quantitative research in political science.\n\n\n\n\n\n\n\n\n\n\n\nIntroduction to R for Political Scientists\nLearn to use data science tools to support your research."
+    "section": "Spring 2024",
+    "text": "Spring 2024\n\n\n\n\n\n\n\n\n\nGVPT722: Advanced Quantitative Methods for Political Science\nAn introduction to multivariate analysis."
   },
   {
     "objectID": "research/index.html",
     "href": "research/index.html",
     "title": "Research",
     "section": "",
-    "text": "I am interested in dependence between countries and its effects on non-state actors. I am particularly interested in the effect of dependence on conflict outcomes.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nML-Assisted Events Data Coding\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTrade Dependence\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "I am interested in dependence between countries and its effects on non-state actors. I am particularly interested in the effect of dependence on conflict outcomes."
+  },
+  {
+    "objectID": "research/index.html#published-and-working-papers",
+    "href": "research/index.html#published-and-working-papers",
+    "title": "Research",
+    "section": "Published and working papers",
+    "text": "Published and working papers\n\nInternal drivers of self-rule referendums (2024)\nIn Conflict Management and Peace Science\nWith Kathleen Gallagher Cunningham, and Laia Balcells\nFrom Catalonia to Kurdistan to Scotland, referendums have increasingly become popular strategies of self-rule movements. Despite this, many referendums are considered failures by the movements (revealing a dearth of support), some are marred by violence, and few garner external backing. Given this, when are they likely to be employed? We argue that internal competition serves as one driving force for actors to use referendums as a way to gain or uphold status within the movement. Using novel data and two case studies, we highlight the ways these movements arrive at a vote for self-rule, underscoring the role of internal competition.\n\n\nCoding with the machines: machine-assisted coding of rare event data (2024)\nIn Proceedings of the National Academy of Sciences of the United States of America\nWith Henry David Overos, Roman Hlatky, Ojashwi Pathak, Jordan Gouws-Dewar, Katy Smith, Keith Padraic Chew, Jóhanna K Birnir, and Amy H Liu\nWhile machine coding of data has dramatically advanced in recent years, the literature raises significant concerns about validation of LLM classification showing, for example, that reliability varies greatly by prompt and temperature tuning, across subject areas and tasks—especially in “zero-shot” applications. This paper contributes to the discussion of validation in several different ways. To test the relative performance of supervised and semi-supervised algorithms when coding political data, we compare three models’ performances to each other over multiple iterations for each model and to trained expert coding of data. We also examine changes in performance resulting from prompt engineering and pre-processing of source data. To ameliorate concerns regarding LLM’s pre-training on test data, we assess performance by updating an existing dataset beyond what is publicly available. Overall, we find that only GPT-4 approaches trained expert coders when coding contexts familiar to human coders and codes more consistently across contexts. We conclude by discussing some benefits and drawbacks of machine coding moving forward.\n\n\nPlenty of Fish in the Sea (working paper)\nThis paper examines how how third-party states’ ability to fill trade gaps left by economic sanctions influences whether sanctions are imposed in the first place. It argues that sanctions are less likely when the target state can easily find alternative markets for the specific goods being restricted, as this undermines the sanctions’ effectiveness. By focusing on product-specific trade networks, rather than broad economic ties, the study offers a more nuanced understanding of when and why sanctions are used. This research is important as it sheds light on why some states evade sanctions and highlights the importance of global trade networks in shaping economic statecraft. The findings have significant implications for how states wield sanctions to achieve geopolitical goals in an interconnected world.\n\n\nTactics of Survival: Strategies of Resistance Data Project Update (forthcoming)\nWith Kathleen Cunningham, Ted Ellsworth, Michael Cowan, Oja Pathak, and Ellin Chung\nThis data feature presents the updated Strategies of Resistance Datas Project (SRDP), which provides organization-level data on duration of claim-making activity, violent and nonviolent tactics, demands over self-determination, and accommodations by the state. In the original data release, key comparisons were drawn between uses of mass nonviolence and smaller-scale nonviolent tactics, highlighting how common nonviolent direct action is, the extent to which it co-occurs with violence, and what we miss by examining only mass nonviolent campaigns. In the update, which includes new organizational-level data to 2020, we demonstrate how these data can be leveraged to understand and uniquely test hypotheses about organizational survival. Evaluating a set of hypotheses about the correlates of organizational survival drawn from the literature, we find that nonviolent tactical diversity is associated with longer survival and accommodation of the self-determination movements is associated with quicker exit."
+  },
+  {
+    "objectID": "research/index.html#research-areas",
+    "href": "research/index.html#research-areas",
+    "title": "Research",
+    "section": "Research areas",
+    "text": "Research areas"
   },
   {
     "objectID": "research/trade_dependence.html",
@@ -46,6 +60,6 @@
     "href": "about.html",
     "title": "Harriet Goers",
     "section": "",
-    "text": "I am a PhD student in the Department of Government and Politics at the University of Maryland, College Park. I research international dependence, civil conflict, and political violence. I am interested in the drivers of tactical variation, including how third-party and external state intervention in the conflict changes rebel groups’ incentives to use violent or non-violent tactics.  Prior to starting my PhD, I worked on the Global Peace Index with the Institute for Economics and Peace, as an analyst with the Australian Department of Defence, and on the Asia Power Index with the Lowy Institute."
+    "text": "I am a PhD student in the Department of Government and Politics at the University of Maryland, College Park. I research how small- and middle-sized countries leverage their economic power. I am also an adjunct with the RAND Corporation, where I research critical minerals supply chain vulnerabilities and opportunities for international cooperation in this space.Prior to starting my PhD, I worked on the Global Peace Index with the Institute for Economics and Peace, as an analyst with the Australian Department of Defence, and on the Asia Power Index with the Lowy Institute."
   }
 ]

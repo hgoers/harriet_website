@@ -3,23 +3,9 @@ title: "Teaching"
 page-layout: full
 ---
 
-## Spring 2024
+## Fall 2024 (and 2023)
 
-::: grid
-::: g-col-2
-![](img/hex-testudo.png){fig-align="center" width="100"}
-:::
-
-::: g-col-10
-### [GVPT722: Advanced Quantitative Methods for Political Science](https://hgoers.github.io/GVPT722/)
-
-An introduction to multivariate analysis.
-:::
-:::
-
-## Fall 2023
-
-::: grid
+::::: grid
 ::: g-col-2
 ![](img/hex-testudo.png){fig-align="center" width="100"}
 :::
@@ -29,9 +15,9 @@ An introduction to multivariate analysis.
 
 An introduction to research methods and quantitative research in political science.
 :::
-:::
+:::::
 
-::: grid
+::::: grid
 ::: g-col-2
 ![](img/hex-testudo.png){fig-align="center" width="100"}
 :::
@@ -41,4 +27,18 @@ An introduction to research methods and quantitative research in political scien
 
 Learn to use data science tools to support your research.
 :::
+:::::
+
+## Spring 2024
+
+::::: grid
+::: g-col-2
+![](img/hex-testudo.png){fig-align="center" width="100"}
 :::
+
+::: g-col-10
+### [GVPT722: Advanced Quantitative Methods for Political Science](https://hgoers.github.io/GVPT722/)
+
+An introduction to multivariate analysis.
+:::
+:::::
