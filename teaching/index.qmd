@@ -3,17 +3,33 @@ title: "Teaching"
 page-layout: full
 ---
 
-## Fall 2024 (and 2023)
+## PhD-level
 
 ::::: grid
+
 ::: g-col-2
 ![](img/hex-testudo.png){fig-align="center" width="100"}
 :::
 
 ::: g-col-10
-### [GVPT622: Quantitative Methods for Political Science](https://hgoers.github.io/GVPT622/)
+### [GVPT722: Advanced Quantitative Methods for Political Science (Teaching Assistant)](https://hgoers.github.io/GVPT722/)
+
+**2023-present**
+
+An introduction to multivariate analysis.
+:::
+
+::: g-col-2
+![](img/hex-testudo.png){fig-align="center" width="100"}
+:::
+
+::: g-col-10
+### [GVPT622: Quantitative Methods for Political Science (Teaching Assistant)](https://hgoers.github.io/GVPT622/)
+
+**2023-present**
 
 An introduction to research methods and quantitative research in political science.
+
 :::
 :::::
 
@@ -25,11 +41,13 @@ An introduction to research methods and quantitative research in political scien
 ::: g-col-10
 ### [Introduction to R for Political Scientists](https://hgoers.github.io/intro_to_r_ps/)
 
+**2023-present**
+
 Learn to use data science tools to support your research.
 :::
 :::::
 
-## Spring 2024
+## Masters-level
 
 ::::: grid
 ::: g-col-2
@@ -37,8 +55,49 @@ Learn to use data science tools to support your research.
 :::
 
 ::: g-col-10
-### [GVPT722: Advanced Quantitative Methods for Political Science](https://hgoers.github.io/GVPT722/)
+### [Applied Political Analytics Statistics Camp](https://hgoers.github.io/APAN_maths_camp/)
 
-An introduction to multivariate analysis.
+**2025**
+
+An intensive introduction to statistics and R for incoming MS in Applied Political Analytics students. 
+:::
+:::::
+
+## Undergraduate-level
+
+::::: grid
+::: g-col-2
+![](img/hex-testudo.png){fig-align="center" width="100"}
+:::
+
+::: g-col-10
+### GVPT399F: Polls and Playoffs
+
+**2024**
+
+Introduction to Prediction and Forecasting in Politics and Sports. 
+:::
+
+::: g-col-2
+![](img/hex-testudo.png){fig-align="center" width="100"}
+:::
+
+::: g-col-10
+### [GVPT399F: Power, Politics, and Data](https://hgoers.github.io/GVPT399F/)
+**2024**
+
+A Hands-On Introduction to Political Science Data Analysis with R
+:::
+
+::: g-col-2
+![](img/hex-testudo.png){fig-align="center" width="100"}
+:::
+
+::: g-col-10
+### GVPT201: Scope and Methods for Political Science Research
+
+**2025**
+
+Introduction to statistical analysis and R.
 :::
 :::::

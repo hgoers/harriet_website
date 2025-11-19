@@ -5,17 +5,9 @@ listing:
   type: grid
 ---
 
-I am interested in dependence between countries and its effects on non-state actors. I am particularly interested in the effect of dependence on conflict outcomes.
+I am an expert in graph theory and international trade. I explore how small- and medium-sized economies use their positions within trade networks to secure their national interests.
 
 ## Published and working papers
-
-### Internal drivers of self-rule referendums (2024)
-
-In *Conflict Management and Peace Science*
-
-With Kathleen Gallagher Cunningham, and Laia Balcells
-
-From Catalonia to Kurdistan to Scotland, referendums have increasingly become popular strategies of self-rule movements. Despite this, many referendums are considered failures by the movements (revealing a dearth of support), some are marred by violence, and few garner external backing. Given this, when are they likely to be employed? We argue that internal competition serves as one driving force for actors to use referendums as a way to gain or uphold status within the movement. Using novel data and two case studies, we highlight the ways these movements arrive at a vote for self-rule, underscoring the role of internal competition.
 
 ### Coding with the machines: machine-assisted coding of rare event data (2024)
 
@@ -24,6 +16,14 @@ In *Proceedings of the National Academy of Sciences of the United States of Amer
 With Henry David Overos, Roman Hlatky, Ojashwi Pathak, Jordan Gouws-Dewar, Katy Smith, Keith Padraic Chew, Jóhanna K Birnir, and Amy H Liu
 
 While machine coding of data has dramatically advanced in recent years, the literature raises significant concerns about validation of LLM classification showing, for example, that reliability varies greatly by prompt and temperature tuning, across subject areas and tasks—especially in “zero-shot” applications. This paper contributes to the discussion of validation in several different ways. To test the relative performance of supervised and semi-supervised algorithms when coding political data, we compare three models’ performances to each other over multiple iterations for each model and to trained expert coding of data. We also examine changes in performance resulting from prompt engineering and pre-processing of source data. To ameliorate concerns regarding LLM’s pre-training on test data, we assess performance by updating an existing dataset beyond what is publicly available. Overall, we find that only GPT-4 approaches trained expert coders when coding contexts familiar to human coders and codes more consistently across contexts. We conclude by discussing some benefits and drawbacks of machine coding moving forward.
+
+### Internal drivers of self-rule referendums (2024)
+
+In *Conflict Management and Peace Science*
+
+With Kathleen Gallagher Cunningham, and Laia Balcells
+
+From Catalonia to Kurdistan to Scotland, referendums have increasingly become popular strategies of self-rule movements. Despite this, many referendums are considered failures by the movements (revealing a dearth of support), some are marred by violence, and few garner external backing. Given this, when are they likely to be employed? We argue that internal competition serves as one driving force for actors to use referendums as a way to gain or uphold status within the movement. Using novel data and two case studies, we highlight the ways these movements arrive at a vote for self-rule, underscoring the role of internal competition.
 
 ### Plenty of Fish in the Sea (working paper)
 
