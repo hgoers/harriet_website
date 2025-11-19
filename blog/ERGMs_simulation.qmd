@@ -1,0 +1,632 @@
+---
+title: "Fitting ERGMs to Real Networks"
+subtitle: "Using MCMC Simulation for Congressional Co-Sponsorship"
+date: "19 November 2025"
+toc: true
+execute:
+  warning: false
+categories:
+  - ERGM
+  - Network analysis
+  - MCMC
+  - Simulation
+---
+
+```{r setup}
+library(tidyverse)
+library(network)
+library(ergm)
+
+set.seed(12345)
+```
+
+## The Computational Challenge
+
+In the previous post, we worked with a 3-node network where we could enumerate all 64 possible networks. We calculated the probability of each one, and then randomly sampled one according to those probabilities.
+
+But what happens when we study real political networks?
+
+-   **U.S. Senate** (100 senators): $2^{4950}$ possible networks (that's a 1 followed by 1,490 zeros!)
+-   **U.S. House** (435 representatives): $2^{94395}$ possible networks (incomprehensibly large)
+-   **State legislature** (even 50 members): $2^{1225}$ possible networks
+
+We cannot enumerate all possible networks. The numbers are astronomically large. We need a different approach: **simulation**.
+
+## Our Example: Congressional Co-Sponsorship
+
+Let's study how members of Congress collaborate on legislation. When Representative Smith co-sponsors Representative Jones' bill, they form a tie. This creates a network of legislative collaboration.
+
+**Research questions we might ask:**
+
+1.  Do members of the same party co-sponsor together more often?
+2.  Is co-sponsorship reciprocal? (If A co-sponsors B's bills, does B co-sponsor A's?)
+3.  Do legislators form tight collaboration clusters (triangles of mutual support)?
+4.  Does seniority matter for attracting co-sponsors?
+
+We'll use a synthetic dataset of 20 House members to demonstrate how to fit ERGMs when enumeration is impossible.
+
+## Step 1: Load and Examine the Network
+
+Let's create a realistic co-sponsorship network for 20 House members:
+
+```{r}
+# Create a network of 20 House members
+n_members <- 20
+
+# Node attributes
+member_data <- tibble(
+  name = paste0("Rep_", 1:n_members),
+  party = rep(c("D", "R"), each = n_members/2),  # 10 Democrats, 10 Republicans
+  seniority = sample(1:20, n_members, replace = FALSE)  # Years in Congress
+)
+
+# Create the network object
+house_net <- network(n_members, directed = TRUE)
+
+# Add vertex attributes
+set.vertex.attribute(house_net, "party", member_data$party)
+set.vertex.attribute(house_net, "seniority", member_data$seniority)
+set.vertex.attribute(house_net, "name", member_data$name)
+
+# Simulate some realistic co-sponsorship ties
+# We'll create ties based on party and reciprocity
+set.seed(12345)
+for(i in 1:n_members) {
+  for(j in 1:n_members) {
+    if(i != j) {
+      party_match <- member_data$party[i] == member_data$party[j]
+      # Higher probability if same party
+      prob <- ifelse(party_match, 0.25, 0.05)
+      if(runif(1) < prob) {
+        house_net[i, j] <- 1
+      }
+    }
+  }
+}
+```
+
+**Understanding our network:**
+
+-   **20 nodes**: Each represents a House member
+-   **Directed ties**: If Rep_1 → Rep_2, it means Rep_1 co-sponsors Rep_2's bills
+-   **Attributes**: Each member has a party (D or R) and seniority (years in Congress)
+
+```{r}
+# Visualize the network
+plot(house_net, 
+     vertex.col = ifelse(member_data$party == "D", "steelblue", "darkred"),
+     vertex.cex = member_data$seniority / 5,
+     main = "House Co-Sponsorship Network\n(Blue = Democrat, Red = Republican)",
+     edge.col = rgb(0, 0, 0, 0.3))
+```
+
+**What do we see?**
+
+Members of the same party (same color) appear to co-sponsor together more often. In fact, by design, members of the same party have a 25% chance of co-sponsoring bills together. Members of opposite parties have only 5% chance of doing so. But we need ERGMs to rigorously identify and test this, and account for other factors.
+
+## Step 2: The Impossible Task of Enumeration
+
+For our 20-member network, there are $2^{380}$ possible networks (20 × 19 = 380 possible directed ties).
+
+**The fundamental problem:** We cannot calculate the normalizing constant κ(θ) by summing over all possible networks because there are too many.
+
+**The solution:** Instead of calculating κ(θ) exactly, we **estimate** it using simulation.
+
+## Step 3: Understanding MCMC Simulation
+
+**MCMC** stands for "Markov Chain Monte Carlo." Let's break down what this means.
+
+**The core idea:**
+
+Instead of looking at ALL possible networks (impossible), we'll:
+
+1.  Start with our observed network
+2.  Make small random changes (add a tie, delete a tie) based on important features and their parameters
+3.  After each change, decide: "Is this new network more or less probable given my parameters?"
+4.  Keep changes that lead to more probable networks (and sometimes keep changes that don't, to explore broadly)
+5.  Repeat thousands of times
+
+After many iterations, we'll have a **sample** of networks that represents what networks look like under our parameters. We use this sample to estimate the normalizing constant.
+
+**Let's see this in action with a simple example:**
+
+Imagine we have some parameters in mind: β₀ = -3.0 (sparse networks), β₁ = 2.0 (same-party pairs more likely). Let's manually walk through two MCMC steps.
+
+```{r}
+# Function to calculate network score given parameters
+calculate_score <- function(net, beta_edges, beta_party) {
+  n_edges <- network.edgecount(net)
+  
+  # Count same-party ties
+  party_vec <- get.vertex.attribute(net, "party")
+  n_party_match <- 0
+  for(i in 1:network.size(net)) {
+    for(j in 1:network.size(net)) {
+      if(i != j && net[i,j] == 1) {
+        if(party_vec[i] == party_vec[j]) {
+          n_party_match <- n_party_match + 1
+        }
+      }
+    }
+  }
+  
+  score <- beta_edges * n_edges + beta_party * n_party_match
+  return(list(score = score, edges = n_edges, party_match = n_party_match))
+}
+
+# Our hypothetical parameters
+beta_edges <- -3.0
+beta_party <- 2.0
+```
+
+**MCMC simulation:**
+
+```{r}
+# STEP 0: Calculate score for observed network
+current_net <- house_net
+current_stats <- calculate_score(current_net, beta_edges, beta_party)
+```
+
+Starting with the observed network:
+
+-   Edges: `r current_stats$edges`
+-   Same-party ties: `r current_stats$party_match`
+-   **Score: `r current_stats$score`**
+
+```{r}
+# STEP 1: Propose a change - randomly toggle one tie
+set.seed(111)
+# Pick a random pair
+i <- sample(1:network.size(current_net), 1)
+j <- sample((1:network.size(current_net))[-i], 1)
+
+# Create proposed network
+proposed_net1 <- current_net
+proposed_net1[i, j] <- 1 - proposed_net1[i, j]  # Flip tie (0→1 or 1→0)
+
+proposed_stats1 <- calculate_score(proposed_net1, beta_edges, beta_party)
+
+party_vec <- get.vertex.attribute(house_net, "party")
+change_type <- ifelse(current_net[i,j] == 0, "ADD", "REMOVE")
+party_info <- sprintf("(%s-%s)", party_vec[i], party_vec[j])
+```
+
+Propose to `r change_type` `r i`→`r j` `r party_info`. This would result in the following changes to the network:
+
+-   Edges: `r current_stats$edges` → `r proposed_stats1$edges`
+-   Same-party ties: `r current_stats$party_match` → `r proposed_stats1$party_match`
+-   **Score: `r current_stats$score` → `r proposed_stats1$score` (change: `r proposed_stats1$score - current_stats$score` point)**
+
+```{r}
+# Decide whether to accept
+score_diff <- proposed_stats1$score - current_stats$score
+accept_prob <- min(1, exp(score_diff))
+```
+
+**Acceptance probability of `r accept_prob`.**
+
+Next, we take this new network and randomly select a tie to toggle.
+
+```{r}
+# STEP 2: Propose another change
+set.seed(222)
+i <- sample(1:network.size(current_net), 1)
+j <- sample((1:network.size(current_net))[-i], 1)
+
+proposed_net2 <- proposed_net1
+proposed_net2[i, j] <- 1 - proposed_net2[i, j]
+
+proposed_stats2 <- calculate_score(proposed_net2, beta_edges, beta_party)
+
+change_type <- ifelse(proposed_net1[i,j] == 0, "ADD", "REMOVE")
+party_info <- sprintf("(%s-%s)", party_vec[i], party_vec[j])
+```
+
+Propose to `r change_type` `r i`→`r j` `r party_info`. This would result in the following changes to the network:
+
+-   Edges: `r proposed_stats1$edges` → `r proposed_stats2$edges`
+-   Same-party ties: `r proposed_stats1$party_match` → `r proposed_stats2$party_match`
+-   **Score: `r proposed_stats1$score` → `r proposed_stats2$score` (change: `r proposed_stats2$score - proposed_stats1$score` point)**
+
+```{r}
+score_diff <- proposed_stats2$score - proposed_stats1$score
+accept_prob <- min(1, exp(score_diff))
+```
+
+**Acceptance probability of `r accept_prob`.**
+
+**Key insights:**
+
+1.  Changes that INCREASE the score (make network more probable) are always accepted (acceptance probability = 1.0).
+
+2.  Changes that DECREASE the score might still be accepted with probability = exp(score_change). This prevents getting stuck in local optima.
+
+3.  Adding a same-party tie increases both `edges` and `party_match`. Effect on score: -3.0(+1) + 2.0(+1) = -1.0 (net decrease).
+
+4.  Adding a cross-party tie increases only edges. Effect on score: -3.0(+1) + 2.0(0) = -3.0 (larger decrease).
+
+5.  After thousands of steps, we'll have a sample of networks that reflects what networks look like under these parameters.
+
+**Why "Markov Chain"?**
+
+Each new network depends only on the previous network (we make one small change at a time). This creates a "chain" of networks: Network₁ → Network₂ → Network₃ → ...
+
+**Why "Monte Carlo"?**
+
+We use randomness to explore the space of networks. "Monte Carlo" is a fancy name for "using random sampling to estimate things."
+
+**The acceptance rule explained:**
+
+-   If score increases: Always accept (this network is more probable using the given parameters)
+-   If score decreases by Δ: Accept with probability exp(Δ)
+    -   Small decrease: High probability of accepting (explore nearby)
+    -   Large decrease: Low probability of accepting (avoid improbable networks)
+
+This balance lets us explore the space of probable networks without getting stuck.
+
+::: callout-note
+## Why not just randomly sample networks?
+
+You might wonder: "Why go through this complicated accept/reject process? Why not just randomly generate networks and use those?"
+
+Here's the problem. Imagine our parameters say:
+
+-   β₀ = -3.0 (networks should be very sparse)
+-   β₁ = 2.0 (same-party ties strongly preferred)
+
+If we randomly generate networks (flip a coin for each possible tie), we'd get:
+
+-   Networks with about 190 ties on average (50% of 380 possible ties)
+-   These random networks are EXTREMELY improbable under our parameters
+-   We'd waste computational effort evaluating networks that have essentially zero probability
+
+**The key insight: We need to sample networks proportional to their probability.**
+
+**A concrete analogy:**
+
+Suppose you want to estimate the average income in a city.
+
+-   **Random sampling**: Survey 1,000 completely random people. This works!
+-   **ERGM's challenge**: But imagine 99.9% of people earn \$0 and only 0.1% earn normal incomes. Random sampling would very frequently give you all zeros, which isn't useful for understanding the income distribution.
+-   **MCMC solution**: Sample people proportional to their income probability. You'd naturally get more samples from the relevant part of the distribution.
+
+For ERGMs, the "relevant part" is networks that are probable under our parameters. MCMC's accept/reject rule ensures we spend our computational effort where it matters—on networks that could actually occur given our model.
+:::
+
+## Step 4: Fitting a Simple ERGM
+
+Let's start with a model that includes both dyadic factors (party) and a structural feature (reciprocity). Because reciprocity creates dependencies between ties, this model requires MCMC—we cannot use simple logistic regression.
+
+```{r}
+# Model 1: Edges + Party homophily + Reciprocity
+model1 <- ergm(house_net ~ edges + nodematch("party") + mutual)
+
+summary(model1)
+```
+
+**Understanding the output:**
+
+The `ergm()` function uses MCMC to estimate parameters. Let's interpret what we got:
+
+-   `edges`: This is like β₀ (baseline). It tells us the overall tendency to form ties. A negative value means ties are generally sparse.
+
+-   `nodematch.party`: This tells us whether same-party members co-sponsor more. A positive value means "yes, same party increases co-sponsorship."
+
+-   `mutual`: This tells us about reciprocity. A positive value means co-sponsorship tends to be mutual—if A co-sponsors B's bills, B is more likely to co-sponsor A's bills.
+
+**Why this model requires MCMC:**
+
+The `mutual` term creates dependency: the probability of tie B→A depends on whether tie A→B exists. This means we cannot treat each tie independently (which would allow simple logistic regression). We must use MCMC to handle this interdependence between a large number of actors.
+
+**What happened behind the scenes?**
+
+Fitting an ERGM involves finding the parameters (β values) that make our observed network most probable. But we can't calculate probabilities exactly because we can't enumerate all networks. So we use an iterative process:
+
+1.  Start with initial parameter guesses (often all zeros: β₀ = 0, β₁ = 0, β₂ = 0, or those estimated using maximum pseudo-likelihood estimation)
+
+2.  Calculate the sufficient statistics of our observed network:
+
+    -   Observed edges: count them
+    -   Observed same-party ties: count them
+    -   Observed mutual dyads: count them
+
+3.  For the current parameter values, use MCMC to simulate many networks and calculate their average statistics:
+
+    -   Average edges across simulated networks
+    -   Average same-party ties across simulated networks
+    -   Average mutual dyads across simulated networks
+
+4.  Compare observed statistics to simulated statistics:
+
+    -   If observed edges \> simulated edges: increase β₀ (make edges more likely)
+    -   If observed edges \< simulated edges: decrease β₀ (make edges less likely)
+    -   Same logic for β₁ and same-party ties
+    -   Same logic for β₂ and mutual dyads
+
+5.  Update parameters and repeat steps 3-4
+
+6.  Continue until average of the simulated statistics match observed statistics
+
+**Why this works:**
+
+When the parameters are "correct" (maximum likelihood estimates), the simulated networks will have the same statistics on average as our observed network. If observed edges = 50 and simulated edges average to 35, we need to increase β₀. If they match at 50 and 50, we've found the right parameter!
+
+**The computational challenge:**
+
+For our 20-member network with structural dependencies, the `ergm()` function might:
+
+-   Try 20-30 different parameter combinations
+-   For each combination, simulate 1,000-10,000 networks
+-   Total: 20,000-300,000 network evaluations
+
+This happens in seconds on modern computers, but would be impossible if we tried to enumerate all $2^{380}$ possible networks!
+
+**A simplified example:**
+
+Observed network statistics:
+
+-   Edges: `r summary(house_net ~ edges)`
+-   Same-party ties: `r summary(house_net ~ nodematch("party"))`
+-   Mutual dyads: `r summary(house_net ~ mutual)`
+
+Imagine the algorithm tries these parameter values:
+
+-   Iteration 1: β₀ = 0.0, β₁ = 0.0, β₂ = 0.0 (starting guess)
+
+    -   Simulated edges: 95 (too many!)
+
+    -   Simulated same-party: 48 (may differ from observed)
+
+    -   Simulated mutual: 12 (may differ from observed)
+
+    -   **Therefore: decrease β₀, adjust β₁ and β₂**
+
+-   Iteration 2: β₀ = -1.5, β₁ = 1.0, β₂ = 0.5
+
+    -   Simulated edges: 68 (still too many)
+
+    -   Simulated same-party: 43 (getting closer)
+
+    -   Simulated mutual: 6 (adjusting)
+
+    -   **Therefore, decrease β₀ more, adjust others**
+
+-   Iteration 3: β₀ = -2.3, β₁ = 1.4, β₂ = 1.2
+
+    -   Simulated edges: close to `r summary(house_net ~ edges)`
+
+    -   Simulated same-party: close to `r summary(house_net ~ nodematch("party"))`
+
+    -   Simulated mutual: close to `r summary(house_net ~ mutual)`
+
+    -   **Therefore, small adjustments**
+
+... (continues until convergence) ...
+
+Final estimates (from actual model):
+
+```         
+-   β₀ (edges) = `r round(coef(model1)["edges"], 3)`
+-   β₁ (same-party) = `r round(coef(model1)["nodematch.party"], 3)`
+-   β₂ (mutual) = `r round(coef(model1)["mutual"], 3)`
+```
+
+## Step 5: Interpreting Parameters
+
+Let's interpret our results in plain language:
+
+```{r}
+#| echo: false
+# Extract coefficients
+coefs <- coef(model1)
+```
+
+Edges coefficient: `r round(coefs["edges"], 3)`.
+
+-   This negative number means co-sponsorship ties are sparse.
+-   Baseline probability of a tie: `r round(plogis(coefs["edges"]), 3)`, or `r scales::percent(plogis(coefs["edges"]))`.
+
+Same-party coefficient: `r round(coefs["nodematch.party"], 3)`.
+
+-   This positive number means same-party members co-sponsor more.
+-   Multiplier effect: exp(`r round(coefs["nodematch.party"], 3)`), or `r round(exp(coefs["nodematch.party"]), 3)`.
+-   Same-party pairs are `r round(exp(coefs["nodematch.party"]), 3)` times more likely to co-sponsor (compared to the baseline).
+
+Mutual coefficient: `r round(coefs["mutual"], 3)`.
+
+-   Positive reciprocity: Co-sponsorship tends to be mutual. This captures the norm of "you scratch my back, I'll scratch yours" in Congress.
+-   If A co-sponsors B's bills, B is `r round(exp(coefs["mutual"]), 2)` times more likely to co-sponsor A's bills (compared to baseline).
+
+## Step 6: Checking Model Fit with Simulation
+
+How do we know if our model is good? We simulate networks from the fitted model and compare them to our observed network.
+
+**The logic:**
+
+1.  Our fitted model has parameters that define a probability distribution over all networks
+2.  We can use MCMC to draw sample networks from this distribution
+3.  If our model is good, these simulated networks should look like our observed network
+
+```{r}
+# Simulate 100 networks from the fitted model
+sim_networks <- simulate(model1, nsim = 100)
+
+# Calculate statistics for simulated networks
+sim_stats <- attr(sim_networks, "stats")
+
+# Compare to observed network statistics
+obs_edges <- summary(house_net ~ edges)
+obs_party <- summary(house_net ~ nodematch("party"))
+obs_mutual <- summary(house_net ~ mutual)
+```
+
+**Goodness of fit:**
+
+Observed network statistics:
+
+```{r}
+tibble(
+  Statistic = c("Edges", "Same-party ties", "Mutual dyads"),
+  Observed = c(summary(house_net ~ edges), summary(house_net ~ nodematch("party")), summary(house_net ~ mutual)),
+  Simulated = c(mean(sim_stats[, "edges"]), mean(sim_stats[, "nodematch.party"]), mean(sim_stats[, "mutual"]))
+) %>% 
+  knitr::kable()
+```
+
+**What are we checking?**
+
+If the simulated statistics are close to the observed statistics, our model captures the key features of the network well.
+
+## Step 7: Adding Transitivity (Clustering)
+
+Do House members form tight collaboration clusters? If A co-sponsors with B, and B co-sponsors with C, is A more likely to co-sponsor with C?
+
+This is called **transitivity** or **triadic closure**—the same structural feature we studied with conflict networks, but here it might be positive (legislators form caucuses and working groups).
+
+```{r}
+# Model 3: Add transitivity
+# Note: gwesp is a "geometrically weighted edgewise shared partner" term
+# It's a more stable way to model transitivity than counting all triangles
+model2 <- ergm(house_net ~ edges + nodematch("party") + mutual + gwesp(0.5, fixed = TRUE))
+
+summary(model2)
+```
+
+**Understanding gwesp:**
+
+The `gwesp` term measures transitivity in a sophisticated way. Instead of simply counting triangles (which can cause computational problems), it weights different types of shared partnerships.
+
+-   **Positive gwesp**: Legislators form clusters (if A↔B and B↔C, then A↔C is more likely)
+-   **Negative gwesp**: Legislators avoid complex collaboration patterns
+
+```{r}
+#| echo: false
+
+coefs3 <- coef(model2)
+```
+
+GWESP coefficient: `r round(coefs3["gwesp.OTP.fixed.0.5"], 3)`.
+
+-   Negative transitivity: Legislators avoid dense collaboration clusters.
+-   However, this coefficient is not statistically significant.
+    -   This makes sense: the only feature we included when we created this network was party matching.
+
+## Step 8: Understanding MCMC Diagnostics
+
+When fitting ERGMs with MCMC, we need to check that the simulation converged properly.
+
+**What does "convergence" mean?**
+
+Imagine you're exploring a vast landscape in the fog, trying to map out the terrain. You take random steps and record what you find. "Convergence" means you've explored enough that you have a good sense of the whole landscape—you're not stuck in one corner or wandering aimlessly.
+
+For MCMC, convergence means:
+
+-   The chain has explored the space of likely networks adequately
+-   The parameter estimates have stabilized
+-   We can trust the results
+
+We can check for convergence in the long output provided by `mcmc.diagnostics()`:
+
+```{r}
+# Check MCMC diagnostics
+mcmc.diagnostics(model2)
+```
+
+**Sample statistics summary interpretation:**
+
+-   `Iterations = 14336:262144`: This is the range of iterations that were used to calculate the reported sample statistics.
+
+    -   The statistics summarized in the diagnostic report were calculated using the 247,809 samples collected from iteration 14,336 up to and including 262,144.
+    -   The MCMC sampler ran for 14,335 iterations before the **burn-in period** ended and the sampling for statistics began.
+
+-   `Thinning interval = 1024`: The MCMC algorithm only records the state of the network once every 1,024 steps/iterations.
+
+    -   Why? To obtain a set of recorded samples that are as close to independent as possible. Successive states of an MCMC chain are often highly correlated (i.e., the state at iteration $t$ is very similar to the state at iteration $t+1$). High autocorrelation means the chain is exploring the sample space slowly, and the samples provide redundant information. By skipping 1,023 steps between each recorded sample, the chain has more time to move to a statistically independent region of the distribution space.
+
+-   `Number of chains = 1`: Only one MCMC simulation was executed and its output was used for the entire analysis.
+
+-   `Sample size per chain = 243`: The final, usable number of independent samples that were recorded for the purpose of inference and diagnostics after accounting for burn-in and thinning.
+
+**Sample statistic distributions:**
+
+The **empirical mean and standard deviation for each variable, plus standard error of the mean** shows the center and spread of differences between the statistics for each 243 sampled networks and the observed network. For example, a mean of -0.1893 for the `edges` variable indicates that the sampled networks had, on average, 0.1893 fewer edges than the observed network.
+
+The diagnostic summary then asks **"Are sample statistics significantly different from observed?"** Ideally, they are not (we get large test statistics and p-values). This is the case for all of our variables except for transitivity, which is reflected in its non-significance in our model.
+
+The summary also includes **sample statistics auto-correlation** across all chains (here, our one chain). Cross-correlation measures the correlation between the sequence of samples for statistic $A$ and the sequence of samples for statistic $B$. High positive cross-correlation means that as the MCMC chain moves to a network state with a high value of statistic A, it also tends to move to a network state with a high value of statistic B. The two statistics move in tandem. For example, `edges` aand `nodematch.party` are highly positively correlated. This means that the chain struggles to explore networks with many edges but few same party matches, or vice-versa. Warning: high cross-correlations in the sample statistics are a sign of poor mixing and can lead to degeneracy issues in the model.
+
+Finally, the summary includes -- in the **Geweke diagnostic** -- a measure of whether the MCMC chain has reached its stationary distribution and is therefore sampling from the target distribution (the ERGM model space). It helps determine if the specified burn-in period was sufficient. This works by dividing the chain into different segments and then asking if the mean parameters of each section are statistically significantly different from each other. The first set of numbers (for example, `edges: 0.9022633`) is the mean parameter's Z-score. The second set of numbers (for example, `edges: 0.3669170`) is the corresponding p-value. Ideally, the segments are not significantly different from each other.
+
+If diagnostics look good, we can trust our parameter estimates!
+
+## Step 9: Comparing Models
+
+Which model best explains co-sponsorship patterns? We can compare models using information criteria:
+
+```{r}
+# Compare models using AIC (Akaike Information Criterion)
+# Lower AIC = better model
+
+aic1 <- AIC(model1)
+aic2 <- AIC(model2)
+
+tibble(
+  model = c("Model 1 (edges + party)", "Model 3 (+ transitivity)"),
+  AIC = c(aic1, aic2)
+) %>% 
+  knitr::kable()
+```
+
+The best model according to this measure is model `r which.min(c(aic1, aic2))`.
+
+**Interpreting AIC:**
+
+-   Lower AIC = better balance of fit and complexity
+-   A difference of 2+ points suggests meaningful improvement
+-   The best model captures the data patterns most efficiently
+
+## The Power of MCMC
+
+**What we accomplished:**
+
+Instead of enumerating 2\^380 impossible networks, we:
+
+1.  Used simulation to estimate the normalizing constant
+2.  Fitted complex models with structural dependencies
+3.  Tested hypotheses about party, reciprocity, and clustering
+4.  Assessed model fit through simulation
+
+**Why this matters:**
+
+MCMC makes ERGMs practical for real political networks. We can now study:
+
+-   Legislative collaboration in Congress (435 members)
+-   International alliance networks (195 countries)
+-   State-level policy diffusion (50 states)
+-   Social movements and organizational ties
+
+The logic remains the same as our 3-node example—we're modeling probability distributions over all possible networks that could form between our actors. MCMC just gives us the computational tools to apply this logic to realistic political science questions.
+
+## Key Takeaways
+
+**From enumeration to simulation:**
+
+-   Small networks: Calculate probabilities exactly by enumerating all possibilities
+-   Large networks: Use MCMC to estimate probabilities through simulation
+
+**The ERGM framework stays the same:**
+
+-   Parameters (β values) weight different features
+-   Networks with more "desirable" features get higher probability
+-   We find parameters that make our observed network most likely
+
+**What MCMC adds:**
+
+-   Computational feasibility for real networks
+-   Ability to include complex structural features
+-   Goodness-of-fit testing through simulation
+-   Model comparison tools
+
+**The fundamental insight:**
+
+Political relationships are interdependent. ERGMs with MCMC let us rigorously study these interdependencies in real-world networks—whether studying how House members form legislative coalitions, how countries build alliance networks, or how policies diffuse across states.

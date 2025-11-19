@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2025-11-19">
+
+<title>Fitting ERGMs to Real Networks – Harriet Goers</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-65ef9bc6449578477aba7d52303f127d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-MWQWNJ6WK8"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-MWQWNJ6WK8', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Harriet Goers</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../research/index.html"> 
+<span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../teaching/index.html"> 
+<span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools tools-wide">
+    <a href="mailto:hgoers@umd.edu" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-envelope"></i></a>
+    <a href="https://github.com/hgoers" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+    <a href="https://scholar.google.com/citations?user=BHZXR-JIB_EC&amp;hl=en" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-mortarboard-fill"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-computational-challenge" id="toc-the-computational-challenge" class="nav-link active" data-scroll-target="#the-computational-challenge">The Computational Challenge</a></li>
+  <li><a href="#our-example-congressional-co-sponsorship" id="toc-our-example-congressional-co-sponsorship" class="nav-link" data-scroll-target="#our-example-congressional-co-sponsorship">Our Example: Congressional Co-Sponsorship</a></li>
+  <li><a href="#step-1-load-and-examine-the-network" id="toc-step-1-load-and-examine-the-network" class="nav-link" data-scroll-target="#step-1-load-and-examine-the-network">Step 1: Load and Examine the Network</a></li>
+  <li><a href="#step-2-the-impossible-task-of-enumeration" id="toc-step-2-the-impossible-task-of-enumeration" class="nav-link" data-scroll-target="#step-2-the-impossible-task-of-enumeration">Step 2: The Impossible Task of Enumeration</a></li>
+  <li><a href="#step-3-understanding-mcmc-simulation" id="toc-step-3-understanding-mcmc-simulation" class="nav-link" data-scroll-target="#step-3-understanding-mcmc-simulation">Step 3: Understanding MCMC Simulation</a></li>
+  <li><a href="#step-4-fitting-a-simple-ergm" id="toc-step-4-fitting-a-simple-ergm" class="nav-link" data-scroll-target="#step-4-fitting-a-simple-ergm">Step 4: Fitting a Simple ERGM</a></li>
+  <li><a href="#step-5-interpreting-parameters" id="toc-step-5-interpreting-parameters" class="nav-link" data-scroll-target="#step-5-interpreting-parameters">Step 5: Interpreting Parameters</a></li>
+  <li><a href="#step-6-checking-model-fit-with-simulation" id="toc-step-6-checking-model-fit-with-simulation" class="nav-link" data-scroll-target="#step-6-checking-model-fit-with-simulation">Step 6: Checking Model Fit with Simulation</a></li>
+  <li><a href="#step-7-adding-transitivity-clustering" id="toc-step-7-adding-transitivity-clustering" class="nav-link" data-scroll-target="#step-7-adding-transitivity-clustering">Step 7: Adding Transitivity (Clustering)</a></li>
+  <li><a href="#step-8-understanding-mcmc-diagnostics" id="toc-step-8-understanding-mcmc-diagnostics" class="nav-link" data-scroll-target="#step-8-understanding-mcmc-diagnostics">Step 8: Understanding MCMC Diagnostics</a></li>
+  <li><a href="#step-9-comparing-models" id="toc-step-9-comparing-models" class="nav-link" data-scroll-target="#step-9-comparing-models">Step 9: Comparing Models</a></li>
+  <li><a href="#the-power-of-mcmc" id="toc-the-power-of-mcmc" class="nav-link" data-scroll-target="#the-power-of-mcmc">The Power of MCMC</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Fitting ERGMs to Real Networks</h1>
+<p class="subtitle lead">Using MCMC Simulation for Congressional Co-Sponsorship</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">ERGM</div>
+    <div class="quarto-category">Network analysis</div>
+    <div class="quarto-category">MCMC</div>
+    <div class="quarto-category">Simulation</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 19, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(network)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ergm)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="the-computational-challenge" class="level2">
+<h2 class="anchored" data-anchor-id="the-computational-challenge">The Computational Challenge</h2>
+<p>In the previous post, we worked with a 3-node network where we could enumerate all 64 possible networks. We calculated the probability of each one, and then randomly sampled one according to those probabilities.</p>
+<p>But what happens when we study real political networks?</p>
+<ul>
+<li><strong>U.S. Senate</strong> (100 senators): <span class="math inline">\(2^{4950}\)</span> possible networks (that’s a 1 followed by 1,490 zeros!)</li>
+<li><strong>U.S. House</strong> (435 representatives): <span class="math inline">\(2^{94395}\)</span> possible networks (incomprehensibly large)</li>
+<li><strong>State legislature</strong> (even 50 members): <span class="math inline">\(2^{1225}\)</span> possible networks</li>
+</ul>
+<p>We cannot enumerate all possible networks. The numbers are astronomically large. We need a different approach: <strong>simulation</strong>.</p>
+</section>
+<section id="our-example-congressional-co-sponsorship" class="level2">
+<h2 class="anchored" data-anchor-id="our-example-congressional-co-sponsorship">Our Example: Congressional Co-Sponsorship</h2>
+<p>Let’s study how members of Congress collaborate on legislation. When Representative Smith co-sponsors Representative Jones’ bill, they form a tie. This creates a network of legislative collaboration.</p>
+<p><strong>Research questions we might ask:</strong></p>
+<ol type="1">
+<li>Do members of the same party co-sponsor together more often?</li>
+<li>Is co-sponsorship reciprocal? (If A co-sponsors B’s bills, does B co-sponsor A’s?)</li>
+<li>Do legislators form tight collaboration clusters (triangles of mutual support)?</li>
+<li>Does seniority matter for attracting co-sponsors?</li>
+</ol>
+<p>We’ll use a synthetic dataset of 20 House members to demonstrate how to fit ERGMs when enumeration is impossible.</p>
+</section>
+<section id="step-1-load-and-examine-the-network" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-load-and-examine-the-network">Step 1: Load and Examine the Network</h2>
+<p>Let’s create a realistic co-sponsorship network for 20 House members:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a network of 20 House members</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n_members <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Node attributes</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>member_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="fu">paste0</span>(<span class="st">"Rep_"</span>, <span class="dv">1</span><span class="sc">:</span>n_members),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">party =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"D"</span>, <span class="st">"R"</span>), <span class="at">each =</span> n_members<span class="sc">/</span><span class="dv">2</span>),  <span class="co"># 10 Democrats, 10 Republicans</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">seniority =</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, n_members, <span class="at">replace =</span> <span class="cn">FALSE</span>)  <span class="co"># Years in Congress</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the network object</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>house_net <span class="ot">&lt;-</span> <span class="fu">network</span>(n_members, <span class="at">directed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Add vertex attributes</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">set.vertex.attribute</span>(house_net, <span class="st">"party"</span>, member_data<span class="sc">$</span>party)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">set.vertex.attribute</span>(house_net, <span class="st">"seniority"</span>, member_data<span class="sc">$</span>seniority)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">set.vertex.attribute</span>(house_net, <span class="st">"name"</span>, member_data<span class="sc">$</span>name)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate some realistic co-sponsorship ties</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># We'll create ties based on party and reciprocity</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12345</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_members) {</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_members) {</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(i <span class="sc">!=</span> j) {</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      party_match <span class="ot">&lt;-</span> member_data<span class="sc">$</span>party[i] <span class="sc">==</span> member_data<span class="sc">$</span>party[j]</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Higher probability if same party</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>      prob <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(party_match, <span class="fl">0.25</span>, <span class="fl">0.05</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;</span> prob) {</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        house_net[i, j] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Understanding our network:</strong></p>
+<ul>
+<li><strong>20 nodes</strong>: Each represents a House member</li>
+<li><strong>Directed ties</strong>: If Rep_1 → Rep_2, it means Rep_1 co-sponsors Rep_2’s bills</li>
+<li><strong>Attributes</strong>: Each member has a party (D or R) and seniority (years in Congress)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the network</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(house_net, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.col =</span> <span class="fu">ifelse</span>(member_data<span class="sc">$</span>party <span class="sc">==</span> <span class="st">"D"</span>, <span class="st">"steelblue"</span>, <span class="st">"darkred"</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.cex =</span> member_data<span class="sc">$</span>seniority <span class="sc">/</span> <span class="dv">5</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"House Co-Sponsorship Network</span><span class="sc">\n</span><span class="st">(Blue = Democrat, Red = Republican)"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">edge.col =</span> <span class="fu">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ERGMs_simulation_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>What do we see?</strong></p>
+<p>Members of the same party (same color) appear to co-sponsor together more often. In fact, by design, members of the same party have a 25% chance of co-sponsoring bills together. Members of opposite parties have only 5% chance of doing so. But we need ERGMs to rigorously identify and test this, and account for other factors.</p>
+</section>
+<section id="step-2-the-impossible-task-of-enumeration" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-the-impossible-task-of-enumeration">Step 2: The Impossible Task of Enumeration</h2>
+<p>For our 20-member network, there are <span class="math inline">\(2^{380}\)</span> possible networks (20 × 19 = 380 possible directed ties).</p>
+<p><strong>The fundamental problem:</strong> We cannot calculate the normalizing constant κ(θ) by summing over all possible networks because there are too many.</p>
+<p><strong>The solution:</strong> Instead of calculating κ(θ) exactly, we <strong>estimate</strong> it using simulation.</p>
+</section>
+<section id="step-3-understanding-mcmc-simulation" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-understanding-mcmc-simulation">Step 3: Understanding MCMC Simulation</h2>
+<p><strong>MCMC</strong> stands for “Markov Chain Monte Carlo.” Let’s break down what this means.</p>
+<p><strong>The core idea:</strong></p>
+<p>Instead of looking at ALL possible networks (impossible), we’ll:</p>
+<ol type="1">
+<li>Start with our observed network</li>
+<li>Make small random changes (add a tie, delete a tie) based on important features and their parameters</li>
+<li>After each change, decide: “Is this new network more or less probable given my parameters?”</li>
+<li>Keep changes that lead to more probable networks (and sometimes keep changes that don’t, to explore broadly)</li>
+<li>Repeat thousands of times</li>
+</ol>
+<p>After many iterations, we’ll have a <strong>sample</strong> of networks that represents what networks look like under our parameters. We use this sample to estimate the normalizing constant.</p>
+<p><strong>Let’s see this in action with a simple example:</strong></p>
+<p>Imagine we have some parameters in mind: β₀ = -3.0 (sparse networks), β₁ = 2.0 (same-party pairs more likely). Let’s manually walk through two MCMC steps.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to calculate network score given parameters</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>calculate_score <span class="ot">&lt;-</span> <span class="cf">function</span>(net, beta_edges, beta_party) {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  n_edges <span class="ot">&lt;-</span> <span class="fu">network.edgecount</span>(net)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Count same-party ties</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  party_vec <span class="ot">&lt;-</span> <span class="fu">get.vertex.attribute</span>(net, <span class="st">"party"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  n_party_match <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">network.size</span>(net)) {</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">network.size</span>(net)) {</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(i <span class="sc">!=</span> j <span class="sc">&amp;&amp;</span> net[i,j] <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(party_vec[i] <span class="sc">==</span> party_vec[j]) {</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>          n_party_match <span class="ot">&lt;-</span> n_party_match <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  score <span class="ot">&lt;-</span> beta_edges <span class="sc">*</span> n_edges <span class="sc">+</span> beta_party <span class="sc">*</span> n_party_match</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">score =</span> score, <span class="at">edges =</span> n_edges, <span class="at">party_match =</span> n_party_match))</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Our hypothetical parameters</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>beta_edges <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">3.0</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>beta_party <span class="ot">&lt;-</span> <span class="fl">2.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>MCMC simulation:</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># STEP 0: Calculate score for observed network</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>current_net <span class="ot">&lt;-</span> house_net</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>current_stats <span class="ot">&lt;-</span> <span class="fu">calculate_score</span>(current_net, beta_edges, beta_party)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Starting with the observed network:</p>
+<ul>
+<li>Edges: 57</li>
+<li>Same-party ties: 42</li>
+<li><strong>Score: -87</strong></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># STEP 1: Propose a change - randomly toggle one tie</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">111</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick a random pair</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">network.size</span>(current_net), <span class="dv">1</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">sample</span>((<span class="dv">1</span><span class="sc">:</span><span class="fu">network.size</span>(current_net))[<span class="sc">-</span>i], <span class="dv">1</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create proposed network</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>proposed_net1 <span class="ot">&lt;-</span> current_net</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>proposed_net1[i, j] <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> proposed_net1[i, j]  <span class="co"># Flip tie (0→1 or 1→0)</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>proposed_stats1 <span class="ot">&lt;-</span> <span class="fu">calculate_score</span>(proposed_net1, beta_edges, beta_party)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>party_vec <span class="ot">&lt;-</span> <span class="fu">get.vertex.attribute</span>(house_net, <span class="st">"party"</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>change_type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(current_net[i,j] <span class="sc">==</span> <span class="dv">0</span>, <span class="st">"ADD"</span>, <span class="st">"REMOVE"</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>party_info <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"(%s-%s)"</span>, party_vec[i], party_vec[j])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Propose to REMOVE 14→20 (R-R). This would result in the following changes to the network:</p>
+<ul>
+<li>Edges: 57 → 56</li>
+<li>Same-party ties: 42 → 41</li>
+<li><strong>Score: -87 → -86 (change: 1 point)</strong></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decide whether to accept</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>score_diff <span class="ot">&lt;-</span> proposed_stats1<span class="sc">$</span>score <span class="sc">-</span> current_stats<span class="sc">$</span>score</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>accept_prob <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="dv">1</span>, <span class="fu">exp</span>(score_diff))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Acceptance probability of 1.</strong></p>
+<p>Next, we take this new network and randomly select a tie to toggle.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># STEP 2: Propose another change</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">222</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">network.size</span>(current_net), <span class="dv">1</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">sample</span>((<span class="dv">1</span><span class="sc">:</span><span class="fu">network.size</span>(current_net))[<span class="sc">-</span>i], <span class="dv">1</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>proposed_net2 <span class="ot">&lt;-</span> proposed_net1</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>proposed_net2[i, j] <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> proposed_net2[i, j]</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>proposed_stats2 <span class="ot">&lt;-</span> <span class="fu">calculate_score</span>(proposed_net2, beta_edges, beta_party)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>change_type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(proposed_net1[i,j] <span class="sc">==</span> <span class="dv">0</span>, <span class="st">"ADD"</span>, <span class="st">"REMOVE"</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>party_info <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"(%s-%s)"</span>, party_vec[i], party_vec[j])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Propose to REMOVE 15→19 (R-R). This would result in the following changes to the network:</p>
+<ul>
+<li>Edges: 56 → 55</li>
+<li>Same-party ties: 41 → 40</li>
+<li><strong>Score: -86 → -85 (change: 1 point)</strong></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>score_diff <span class="ot">&lt;-</span> proposed_stats2<span class="sc">$</span>score <span class="sc">-</span> proposed_stats1<span class="sc">$</span>score</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>accept_prob <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="dv">1</span>, <span class="fu">exp</span>(score_diff))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Acceptance probability of 1.</strong></p>
+<p><strong>Key insights:</strong></p>
+<ol type="1">
+<li><p>Changes that INCREASE the score (make network more probable) are always accepted (acceptance probability = 1.0).</p></li>
+<li><p>Changes that DECREASE the score might still be accepted with probability = exp(score_change). This prevents getting stuck in local optima.</p></li>
+<li><p>Adding a same-party tie increases both <code>edges</code> and <code>party_match</code>. Effect on score: -3.0(+1) + 2.0(+1) = -1.0 (net decrease).</p></li>
+<li><p>Adding a cross-party tie increases only edges. Effect on score: -3.0(+1) + 2.0(0) = -3.0 (larger decrease).</p></li>
+<li><p>After thousands of steps, we’ll have a sample of networks that reflects what networks look like under these parameters.</p></li>
+</ol>
+<p><strong>Why “Markov Chain”?</strong></p>
+<p>Each new network depends only on the previous network (we make one small change at a time). This creates a “chain” of networks: Network₁ → Network₂ → Network₃ → …</p>
+<p><strong>Why “Monte Carlo”?</strong></p>
+<p>We use randomness to explore the space of networks. “Monte Carlo” is a fancy name for “using random sampling to estimate things.”</p>
+<p><strong>The acceptance rule explained:</strong></p>
+<ul>
+<li>If score increases: Always accept (this network is more probable using the given parameters)</li>
+<li>If score decreases by Δ: Accept with probability exp(Δ)
+<ul>
+<li>Small decrease: High probability of accepting (explore nearby)</li>
+<li>Large decrease: Low probability of accepting (avoid improbable networks)</li>
+</ul></li>
+</ul>
+<p>This balance lets us explore the space of probable networks without getting stuck.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why not just randomly sample networks?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You might wonder: “Why go through this complicated accept/reject process? Why not just randomly generate networks and use those?”</p>
+<p>Here’s the problem. Imagine our parameters say:</p>
+<ul>
+<li>β₀ = -3.0 (networks should be very sparse)</li>
+<li>β₁ = 2.0 (same-party ties strongly preferred)</li>
+</ul>
+<p>If we randomly generate networks (flip a coin for each possible tie), we’d get:</p>
+<ul>
+<li>Networks with about 190 ties on average (50% of 380 possible ties)</li>
+<li>These random networks are EXTREMELY improbable under our parameters</li>
+<li>We’d waste computational effort evaluating networks that have essentially zero probability</li>
+</ul>
+<p><strong>The key insight: We need to sample networks proportional to their probability.</strong></p>
+<p><strong>A concrete analogy:</strong></p>
+<p>Suppose you want to estimate the average income in a city.</p>
+<ul>
+<li><strong>Random sampling</strong>: Survey 1,000 completely random people. This works!</li>
+<li><strong>ERGM’s challenge</strong>: But imagine 99.9% of people earn $0 and only 0.1% earn normal incomes. Random sampling would very frequently give you all zeros, which isn’t useful for understanding the income distribution.</li>
+<li><strong>MCMC solution</strong>: Sample people proportional to their income probability. You’d naturally get more samples from the relevant part of the distribution.</li>
+</ul>
+<p>For ERGMs, the “relevant part” is networks that are probable under our parameters. MCMC’s accept/reject rule ensures we spend our computational effort where it matters—on networks that could actually occur given our model.</p>
+</div>
+</div>
+</section>
+<section id="step-4-fitting-a-simple-ergm" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-fitting-a-simple-ergm">Step 4: Fitting a Simple ERGM</h2>
+<p>Let’s start with a model that includes both dyadic factors (party) and a structural feature (reciprocity). Because reciprocity creates dependencies between ties, this model requires MCMC—we cannot use simple logistic regression.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 1: Edges + Party homophily + Reciprocity</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(house_net <span class="sc">~</span> edges <span class="sc">+</span> <span class="fu">nodematch</span>(<span class="st">"party"</span>) <span class="sc">+</span> mutual)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+ergm(formula = house_net ~ edges + nodematch("party") + mutual)
+
+Monte Carlo Maximum Likelihood Results:
+
+                Estimate Std. Error MCMC % z value Pr(&gt;|z|)    
+edges            -2.5411     0.2725      0  -9.325  &lt; 1e-04 ***
+nodematch.party   1.2238     0.3152      0   3.883 0.000103 ***
+mutual            0.4740     0.5098      0   0.930 0.352510    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+     Null Deviance: 526.8  on 380  degrees of freedom
+ Residual Deviance: 301.4  on 377  degrees of freedom
+ 
+AIC: 307.4  BIC: 319.2  (Smaller is better. MC Std. Err. = 0.07014)</code></pre>
+</div>
+</div>
+<p><strong>Understanding the output:</strong></p>
+<p>The <code>ergm()</code> function uses MCMC to estimate parameters. Let’s interpret what we got:</p>
+<ul>
+<li><p><code>edges</code>: This is like β₀ (baseline). It tells us the overall tendency to form ties. A negative value means ties are generally sparse.</p></li>
+<li><p><code>nodematch.party</code>: This tells us whether same-party members co-sponsor more. A positive value means “yes, same party increases co-sponsorship.”</p></li>
+<li><p><code>mutual</code>: This tells us about reciprocity. A positive value means co-sponsorship tends to be mutual—if A co-sponsors B’s bills, B is more likely to co-sponsor A’s bills.</p></li>
+</ul>
+<p><strong>Why this model requires MCMC:</strong></p>
+<p>The <code>mutual</code> term creates dependency: the probability of tie B→A depends on whether tie A→B exists. This means we cannot treat each tie independently (which would allow simple logistic regression). We must use MCMC to handle this interdependence between a large number of actors.</p>
+<p><strong>What happened behind the scenes?</strong></p>
+<p>Fitting an ERGM involves finding the parameters (β values) that make our observed network most probable. But we can’t calculate probabilities exactly because we can’t enumerate all networks. So we use an iterative process:</p>
+<ol type="1">
+<li><p>Start with initial parameter guesses (often all zeros: β₀ = 0, β₁ = 0, β₂ = 0, or those estimated using maximum pseudo-likelihood estimation)</p></li>
+<li><p>Calculate the sufficient statistics of our observed network:</p>
+<ul>
+<li>Observed edges: count them</li>
+<li>Observed same-party ties: count them</li>
+<li>Observed mutual dyads: count them</li>
+</ul></li>
+<li><p>For the current parameter values, use MCMC to simulate many networks and calculate their average statistics:</p>
+<ul>
+<li>Average edges across simulated networks</li>
+<li>Average same-party ties across simulated networks</li>
+<li>Average mutual dyads across simulated networks</li>
+</ul></li>
+<li><p>Compare observed statistics to simulated statistics:</p>
+<ul>
+<li>If observed edges &gt; simulated edges: increase β₀ (make edges more likely)</li>
+<li>If observed edges &lt; simulated edges: decrease β₀ (make edges less likely)</li>
+<li>Same logic for β₁ and same-party ties</li>
+<li>Same logic for β₂ and mutual dyads</li>
+</ul></li>
+<li><p>Update parameters and repeat steps 3-4</p></li>
+<li><p>Continue until average of the simulated statistics match observed statistics</p></li>
+</ol>
+<p><strong>Why this works:</strong></p>
+<p>When the parameters are “correct” (maximum likelihood estimates), the simulated networks will have the same statistics on average as our observed network. If observed edges = 50 and simulated edges average to 35, we need to increase β₀. If they match at 50 and 50, we’ve found the right parameter!</p>
+<p><strong>The computational challenge:</strong></p>
+<p>For our 20-member network with structural dependencies, the <code>ergm()</code> function might:</p>
+<ul>
+<li>Try 20-30 different parameter combinations</li>
+<li>For each combination, simulate 1,000-10,000 networks</li>
+<li>Total: 20,000-300,000 network evaluations</li>
+</ul>
+<p>This happens in seconds on modern computers, but would be impossible if we tried to enumerate all <span class="math inline">\(2^{380}\)</span> possible networks!</p>
+<p><strong>A simplified example:</strong></p>
+<p>Observed network statistics:</p>
+<ul>
+<li>Edges: 57</li>
+<li>Same-party ties: 42</li>
+<li>Mutual dyads: 7</li>
+</ul>
+<p>Imagine the algorithm tries these parameter values:</p>
+<ul>
+<li><p>Iteration 1: β₀ = 0.0, β₁ = 0.0, β₂ = 0.0 (starting guess)</p>
+<ul>
+<li><p>Simulated edges: 95 (too many!)</p></li>
+<li><p>Simulated same-party: 48 (may differ from observed)</p></li>
+<li><p>Simulated mutual: 12 (may differ from observed)</p></li>
+<li><p><strong>Therefore: decrease β₀, adjust β₁ and β₂</strong></p></li>
+</ul></li>
+<li><p>Iteration 2: β₀ = -1.5, β₁ = 1.0, β₂ = 0.5</p>
+<ul>
+<li><p>Simulated edges: 68 (still too many)</p></li>
+<li><p>Simulated same-party: 43 (getting closer)</p></li>
+<li><p>Simulated mutual: 6 (adjusting)</p></li>
+<li><p><strong>Therefore, decrease β₀ more, adjust others</strong></p></li>
+</ul></li>
+<li><p>Iteration 3: β₀ = -2.3, β₁ = 1.4, β₂ = 1.2</p>
+<ul>
+<li><p>Simulated edges: close to 57</p></li>
+<li><p>Simulated same-party: close to 42</p></li>
+<li><p>Simulated mutual: close to 7</p></li>
+<li><p><strong>Therefore, small adjustments</strong></p></li>
+</ul></li>
+</ul>
+<p>… (continues until convergence) …</p>
+<p>Final estimates (from actual model):</p>
+<pre><code>-   β₀ (edges) = -2.541
+-   β₁ (same-party) = 1.224
+-   β₂ (mutual) = 0.474</code></pre>
+</section>
+<section id="step-5-interpreting-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="step-5-interpreting-parameters">Step 5: Interpreting Parameters</h2>
+<p>Let’s interpret our results in plain language:</p>
+<p>Edges coefficient: -2.541.</p>
+<ul>
+<li>This negative number means co-sponsorship ties are sparse.</li>
+<li>Baseline probability of a tie: 0.073, or 7%.</li>
+</ul>
+<p>Same-party coefficient: 1.224.</p>
+<ul>
+<li>This positive number means same-party members co-sponsor more.</li>
+<li>Multiplier effect: exp(1.224), or 3.4.</li>
+<li>Same-party pairs are 3.4 times more likely to co-sponsor (compared to the baseline).</li>
+</ul>
+<p>Mutual coefficient: 0.474.</p>
+<ul>
+<li>Positive reciprocity: Co-sponsorship tends to be mutual. This captures the norm of “you scratch my back, I’ll scratch yours” in Congress.</li>
+<li>If A co-sponsors B’s bills, B is 1.61 times more likely to co-sponsor A’s bills (compared to baseline).</li>
+</ul>
+</section>
+<section id="step-6-checking-model-fit-with-simulation" class="level2">
+<h2 class="anchored" data-anchor-id="step-6-checking-model-fit-with-simulation">Step 6: Checking Model Fit with Simulation</h2>
+<p>How do we know if our model is good? We simulate networks from the fitted model and compare them to our observed network.</p>
+<p><strong>The logic:</strong></p>
+<ol type="1">
+<li>Our fitted model has parameters that define a probability distribution over all networks</li>
+<li>We can use MCMC to draw sample networks from this distribution</li>
+<li>If our model is good, these simulated networks should look like our observed network</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate 100 networks from the fitted model</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>sim_networks <span class="ot">&lt;-</span> <span class="fu">simulate</span>(model1, <span class="at">nsim =</span> <span class="dv">100</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate statistics for simulated networks</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>sim_stats <span class="ot">&lt;-</span> <span class="fu">attr</span>(sim_networks, <span class="st">"stats"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare to observed network statistics</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>obs_edges <span class="ot">&lt;-</span> <span class="fu">summary</span>(house_net <span class="sc">~</span> edges)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>obs_party <span class="ot">&lt;-</span> <span class="fu">summary</span>(house_net <span class="sc">~</span> <span class="fu">nodematch</span>(<span class="st">"party"</span>))</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>obs_mutual <span class="ot">&lt;-</span> <span class="fu">summary</span>(house_net <span class="sc">~</span> mutual)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Goodness of fit:</strong></p>
+<p>Observed network statistics:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Statistic =</span> <span class="fu">c</span>(<span class="st">"Edges"</span>, <span class="st">"Same-party ties"</span>, <span class="st">"Mutual dyads"</span>),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Observed =</span> <span class="fu">c</span>(<span class="fu">summary</span>(house_net <span class="sc">~</span> edges), <span class="fu">summary</span>(house_net <span class="sc">~</span> <span class="fu">nodematch</span>(<span class="st">"party"</span>)), <span class="fu">summary</span>(house_net <span class="sc">~</span> mutual)),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Simulated =</span> <span class="fu">c</span>(<span class="fu">mean</span>(sim_stats[, <span class="st">"edges"</span>]), <span class="fu">mean</span>(sim_stats[, <span class="st">"nodematch.party"</span>]), <span class="fu">mean</span>(sim_stats[, <span class="st">"mutual"</span>]))</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Statistic</th>
+<th style="text-align: right;">Observed</th>
+<th style="text-align: right;">Simulated</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Edges</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">58.97</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Same-party ties</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">42.87</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mutual dyads</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">7.76</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><strong>What are we checking?</strong></p>
+<p>If the simulated statistics are close to the observed statistics, our model captures the key features of the network well.</p>
+</section>
+<section id="step-7-adding-transitivity-clustering" class="level2">
+<h2 class="anchored" data-anchor-id="step-7-adding-transitivity-clustering">Step 7: Adding Transitivity (Clustering)</h2>
+<p>Do House members form tight collaboration clusters? If A co-sponsors with B, and B co-sponsors with C, is A more likely to co-sponsor with C?</p>
+<p>This is called <strong>transitivity</strong> or <strong>triadic closure</strong>—the same structural feature we studied with conflict networks, but here it might be positive (legislators form caucuses and working groups).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 3: Add transitivity</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: gwesp is a "geometrically weighted edgewise shared partner" term</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># It's a more stable way to model transitivity than counting all triangles</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(house_net <span class="sc">~</span> edges <span class="sc">+</span> <span class="fu">nodematch</span>(<span class="st">"party"</span>) <span class="sc">+</span> mutual <span class="sc">+</span> <span class="fu">gwesp</span>(<span class="fl">0.5</span>, <span class="at">fixed =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+ergm(formula = house_net ~ edges + nodematch("party") + mutual + 
+    gwesp(0.5, fixed = TRUE))
+
+Monte Carlo Maximum Likelihood Results:
+
+                    Estimate Std. Error MCMC % z value Pr(&gt;|z|)    
+edges                -2.4163     0.3399      0  -7.109  &lt; 1e-04 ***
+nodematch.party       1.2879     0.3588      0   3.589 0.000332 ***
+mutual                0.4578     0.5130      0   0.892 0.372228    
+gwesp.OTP.fixed.0.5  -0.1585     0.2351      0  -0.674 0.500091    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+     Null Deviance: 526.8  on 380  degrees of freedom
+ Residual Deviance: 301.3  on 376  degrees of freedom
+ 
+AIC: 309.3  BIC: 325  (Smaller is better. MC Std. Err. = 0.07575)</code></pre>
+</div>
+</div>
+<p><strong>Understanding gwesp:</strong></p>
+<p>The <code>gwesp</code> term measures transitivity in a sophisticated way. Instead of simply counting triangles (which can cause computational problems), it weights different types of shared partnerships.</p>
+<ul>
+<li><strong>Positive gwesp</strong>: Legislators form clusters (if A↔︎B and B↔︎C, then A↔︎C is more likely)</li>
+<li><strong>Negative gwesp</strong>: Legislators avoid complex collaboration patterns</li>
+</ul>
+<p>GWESP coefficient: -0.159.</p>
+<ul>
+<li>Negative transitivity: Legislators avoid dense collaboration clusters.</li>
+<li>However, this coefficient is not statistically significant.
+<ul>
+<li>This makes sense: the only feature we included when we created this network was party matching.</li>
+</ul></li>
+</ul>
+</section>
+<section id="step-8-understanding-mcmc-diagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="step-8-understanding-mcmc-diagnostics">Step 8: Understanding MCMC Diagnostics</h2>
+<p>When fitting ERGMs with MCMC, we need to check that the simulation converged properly.</p>
+<p><strong>What does “convergence” mean?</strong></p>
+<p>Imagine you’re exploring a vast landscape in the fog, trying to map out the terrain. You take random steps and record what you find. “Convergence” means you’ve explored enough that you have a good sense of the whole landscape—you’re not stuck in one corner or wandering aimlessly.</p>
+<p>For MCMC, convergence means:</p>
+<ul>
+<li>The chain has explored the space of likely networks adequately</li>
+<li>The parameter estimates have stabilized</li>
+<li>We can trust the results</li>
+</ul>
+<p>We can check for convergence in the long output provided by <code>mcmc.diagnostics()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check MCMC diagnostics</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc.diagnostics</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ERGMs_simulation_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sample statistics summary:
+
+Iterations = 14336:262144
+Thinning interval = 1024 
+Number of chains = 1 
+Sample size per chain = 243 
+
+1. Empirical mean and standard deviation for each variable,
+   plus standard error of the mean:
+
+                       Mean    SD Naive SE Time-series SE
+edges               -0.1893 6.832   0.4383         0.4496
+nodematch.party     -0.1152 5.691   0.3651         0.4338
+mutual              -0.2181 2.535   0.1626         0.1983
+gwesp.OTP.fixed.0.5  1.5174 8.169   0.5240         0.5240
+
+2. Quantiles for each variable:
+
+                      2.5%    25%     50%   75% 97.5%
+edges               -13.00 -5.000 -1.0000 5.000 12.95
+nodematch.party     -10.00 -4.000  0.0000 4.000 11.00
+mutual               -4.00 -2.000  0.0000 1.000  5.00
+gwesp.OTP.fixed.0.5 -11.37 -4.713  0.3935 7.074 18.35
+
+
+Are sample statistics significantly different from observed?
+                edges nodematch.party     mutual gwesp.OTP.fixed.0.5
+diff.      -0.1893004      -0.1152263 -0.2181070         1.517376917
+test stat. -0.4210715      -0.2655990 -1.0998290         2.895541986
+P-val.      0.6737029       0.7905481  0.2714067         0.003785044
+                 (Omni)
+diff.                NA
+test stat. 3.971829e+01
+P-val.     2.356427e-07
+
+Sample statistics cross-correlations:
+                        edges nodematch.party    mutual gwesp.OTP.fixed.0.5
+edges               1.0000000       0.8499789 0.5851644           0.8455051
+nodematch.party     0.8499789       1.0000000 0.6271511           0.7745410
+mutual              0.5851644       0.6271511 1.0000000           0.5053557
+gwesp.OTP.fixed.0.5 0.8455051       0.7745410 0.5053557           1.0000000
+
+Sample statistics auto-correlation:
+Chain 1 
+                edges nodematch.party      mutual gwesp.OTP.fixed.0.5
+Lag 0     1.000000000      1.00000000  1.00000000         1.000000000
+Lag 1024  0.093994006      0.18212609  0.19376684         0.086520670
+Lag 2048 -0.004748367      0.07115234 -0.01070746         0.001059334
+Lag 3072  0.081117030      0.11161007  0.09712974         0.012278959
+Lag 4096 -0.128161317     -0.10894714 -0.03885801        -0.120461001
+Lag 5120 -0.042044941     -0.08834113 -0.03245954        -0.051045473
+
+Sample statistics burn-in diagnostic (Geweke):
+Chain 1 
+
+Fraction in 1st window = 0.1
+Fraction in 2nd window = 0.5 
+
+              edges     nodematch.party              mutual gwesp.OTP.fixed.0.5 
+          0.9022633           0.6309148           0.9914133           1.0159278 
+
+Individual P-values (lower = worse):
+              edges     nodematch.party              mutual gwesp.OTP.fixed.0.5 
+          0.3669170           0.5280962           0.3214838           0.3096637 
+Joint P-value (lower = worse):  0.8258765 
+
+Note: MCMC diagnostics shown here are from the last round of
+  simulation, prior to computation of final parameter estimates.
+  Because the final estimates are refinements of those used for this
+  simulation run, these diagnostics may understate model performance.
+  To directly assess the performance of the final model on in-model
+  statistics, please use the GOF command: gof(ergmFitObject,
+  GOF=~model).</code></pre>
+</div>
+</div>
+<p><strong>Sample statistics summary interpretation:</strong></p>
+<ul>
+<li><p><code>Iterations = 14336:262144</code>: This is the range of iterations that were used to calculate the reported sample statistics.</p>
+<ul>
+<li>The statistics summarized in the diagnostic report were calculated using the 247,809 samples collected from iteration 14,336 up to and including 262,144.</li>
+<li>The MCMC sampler ran for 14,335 iterations before the <strong>burn-in period</strong> ended and the sampling for statistics began.</li>
+</ul></li>
+<li><p><code>Thinning interval = 1024</code>: The MCMC algorithm only records the state of the network once every 1,024 steps/iterations.</p>
+<ul>
+<li>Why? To obtain a set of recorded samples that are as close to independent as possible. Successive states of an MCMC chain are often highly correlated (i.e., the state at iteration <span class="math inline">\(t\)</span> is very similar to the state at iteration <span class="math inline">\(t+1\)</span>). High autocorrelation means the chain is exploring the sample space slowly, and the samples provide redundant information. By skipping 1,023 steps between each recorded sample, the chain has more time to move to a statistically independent region of the distribution space.</li>
+</ul></li>
+<li><p><code>Number of chains = 1</code>: Only one MCMC simulation was executed and its output was used for the entire analysis.</p></li>
+<li><p><code>Sample size per chain = 243</code>: The final, usable number of independent samples that were recorded for the purpose of inference and diagnostics after accounting for burn-in and thinning.</p></li>
+</ul>
+<p><strong>Sample statistic distributions:</strong></p>
+<p>The <strong>empirical mean and standard deviation for each variable, plus standard error of the mean</strong> shows the center and spread of differences between the statistics for each 243 sampled networks and the observed network. For example, a mean of -0.1893 for the <code>edges</code> variable indicates that the sampled networks had, on average, 0.1893 fewer edges than the observed network.</p>
+<p>The diagnostic summary then asks <strong>“Are sample statistics significantly different from observed?”</strong> Ideally, they are not (we get large test statistics and p-values). This is the case for all of our variables except for transitivity, which is reflected in its non-significance in our model.</p>
+<p>The summary also includes <strong>sample statistics auto-correlation</strong> across all chains (here, our one chain). Cross-correlation measures the correlation between the sequence of samples for statistic <span class="math inline">\(A\)</span> and the sequence of samples for statistic <span class="math inline">\(B\)</span>. High positive cross-correlation means that as the MCMC chain moves to a network state with a high value of statistic A, it also tends to move to a network state with a high value of statistic B. The two statistics move in tandem. For example, <code>edges</code> aand <code>nodematch.party</code> are highly positively correlated. This means that the chain struggles to explore networks with many edges but few same party matches, or vice-versa. Warning: high cross-correlations in the sample statistics are a sign of poor mixing and can lead to degeneracy issues in the model.</p>
+<p>Finally, the summary includes – in the <strong>Geweke diagnostic</strong> – a measure of whether the MCMC chain has reached its stationary distribution and is therefore sampling from the target distribution (the ERGM model space). It helps determine if the specified burn-in period was sufficient. This works by dividing the chain into different segments and then asking if the mean parameters of each section are statistically significantly different from each other. The first set of numbers (for example, <code>edges: 0.9022633</code>) is the mean parameter’s Z-score. The second set of numbers (for example, <code>edges: 0.3669170</code>) is the corresponding p-value. Ideally, the segments are not significantly different from each other.</p>
+<p>If diagnostics look good, we can trust our parameter estimates!</p>
+</section>
+<section id="step-9-comparing-models" class="level2">
+<h2 class="anchored" data-anchor-id="step-9-comparing-models">Step 9: Comparing Models</h2>
+<p>Which model best explains co-sponsorship patterns? We can compare models using information criteria:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare models using AIC (Akaike Information Criterion)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Lower AIC = better model</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>aic1 <span class="ot">&lt;-</span> <span class="fu">AIC</span>(model1)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>aic2 <span class="ot">&lt;-</span> <span class="fu">AIC</span>(model2)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"Model 1 (edges + party)"</span>, <span class="st">"Model 3 (+ transitivity)"</span>),</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">AIC =</span> <span class="fu">c</span>(aic1, aic2)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">model</th>
+<th style="text-align: right;">AIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Model 1 (edges + party)</td>
+<td style="text-align: right;">307.3889</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Model 3 (+ transitivity)</td>
+<td style="text-align: right;">309.2818</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The best model according to this measure is model 1.</p>
+<p><strong>Interpreting AIC:</strong></p>
+<ul>
+<li>Lower AIC = better balance of fit and complexity</li>
+<li>A difference of 2+ points suggests meaningful improvement</li>
+<li>The best model captures the data patterns most efficiently</li>
+</ul>
+</section>
+<section id="the-power-of-mcmc" class="level2">
+<h2 class="anchored" data-anchor-id="the-power-of-mcmc">The Power of MCMC</h2>
+<p><strong>What we accomplished:</strong></p>
+<p>Instead of enumerating 2^380 impossible networks, we:</p>
+<ol type="1">
+<li>Used simulation to estimate the normalizing constant</li>
+<li>Fitted complex models with structural dependencies</li>
+<li>Tested hypotheses about party, reciprocity, and clustering</li>
+<li>Assessed model fit through simulation</li>
+</ol>
+<p><strong>Why this matters:</strong></p>
+<p>MCMC makes ERGMs practical for real political networks. We can now study:</p>
+<ul>
+<li>Legislative collaboration in Congress (435 members)</li>
+<li>International alliance networks (195 countries)</li>
+<li>State-level policy diffusion (50 states)</li>
+<li>Social movements and organizational ties</li>
+</ul>
+<p>The logic remains the same as our 3-node example—we’re modeling probability distributions over all possible networks that could form between our actors. MCMC just gives us the computational tools to apply this logic to realistic political science questions.</p>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
+<p><strong>From enumeration to simulation:</strong></p>
+<ul>
+<li>Small networks: Calculate probabilities exactly by enumerating all possibilities</li>
+<li>Large networks: Use MCMC to estimate probabilities through simulation</li>
+</ul>
+<p><strong>The ERGM framework stays the same:</strong></p>
+<ul>
+<li>Parameters (β values) weight different features</li>
+<li>Networks with more “desirable” features get higher probability</li>
+<li>We find parameters that make our observed network most likely</li>
+</ul>
+<p><strong>What MCMC adds:</strong></p>
+<ul>
+<li>Computational feasibility for real networks</li>
+<li>Ability to include complex structural features</li>
+<li>Goodness-of-fit testing through simulation</li>
+<li>Model comparison tools</li>
+</ul>
+<p><strong>The fundamental insight:</strong></p>
+<p>Political relationships are interdependent. ERGMs with MCMC let us rigorously study these interdependencies in real-world networks—whether studying how House members form legislative coalitions, how countries build alliance networks, or how policies diffuse across states.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

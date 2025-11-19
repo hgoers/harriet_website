@@ -2,8 +2,11 @@
 title: "Blog"
 page-layout: full
 contents: blog
-listing:  
+listing: 
   type: default
+  sort: "date desc"
+  categories: true
+  fields: [date, title, subtitle, categories]
 ---
 
-These posts include notes on my current research and reminders on how to do things in R.
+These posts include notes on my current research and reminders of how to do things in R.

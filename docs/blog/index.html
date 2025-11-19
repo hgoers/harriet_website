@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>ML-Assisted Events Data Coding – Harriet Goers</title>
+<title>Blog – Harriet Goers</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,6 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-listing/list.min.js"></script>
+<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -67,6 +69,35 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-subtitle','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-MWQWNJ6WK8"></script>
 
 <script type="text/javascript">
@@ -77,6 +108,35 @@ gtag('js', new Date());
 gtag('config', 'G-MWQWNJ6WK8', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -111,7 +171,7 @@ gtag('config', 'G-MWQWNJ6WK8', { 'anonymize_ip': true});
 <span class="menu-text">Teaching</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../blog/index.html"> 
+    <a class="nav-link active" href="../blog/index.html" aria-current="page"> 
 <span class="menu-text">Blog</span></a>
   </li>  
 </ul>
@@ -125,30 +185,23 @@ gtag('config', 'G-MWQWNJ6WK8', { 'anonymize_ip': true});
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#working-papers" id="toc-working-papers" class="nav-link active" data-scroll-target="#working-papers">Working papers</a></li>
-  <li><a href="#presentations" id="toc-presentations" class="nav-link" data-scroll-target="#presentations">Presentations</a></li>
-  </ul>
-</nav>
-    </div>
+        
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="RVJHTQ==">ERGM <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TUNNQw==">MCMC <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TmV0d29yayUyMGFuYWx5c2lz">Network analysis <span class="quarto-category-count">(2)</span></div><div class="category" data-category="U2ltdWxhdGlvbg==">Simulation <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">ML-Assisted Events Data Coding</h1>
+<h1 class="title">Blog</h1>
 </div>
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page-left">
 
     
   
@@ -160,24 +213,68 @@ gtag('config', 'G-MWQWNJ6WK8', { 'anonymize_ip': true});
 </header>
 
 
-<p>I am working on a number of projects to help teams of researchers incorporate machine-learning models into their events data coding. I have had the most success using GPT models to help locate relevant news articles and to extract relevant details from those relevant news articles.</p>
-<p>I have also produced a number of Shiny applications that help speed up human coding or verification of ML-models’ outputs and reduce human error.</p>
-<section id="working-papers" class="level3">
-<h3 class="anchored" data-anchor-id="working-papers">Working papers</h3>
-<p><em>Coding with the machines: machine-assisted coding of rare event data</em>, with Johanna Birnir, Ernesto Calvo, Keith Chew, Jordan Dewar, Roman Hlatky, Amy Liu, Henry Overos, and Ojashwi Pathak.</p>
-<p>While machine coding of data has dramatically advanced in recent years, we do not know the relative performance of supervised and semi-supervised algorithms when coding political data – especially when compared to human coding. In this note, we juxtapose (1) a semi-supervised dictionary-based classifier with (2) an out-of-the-box GPT 4 model and (3) a fine-tuned BERT transformer – and compare all three to human coding of rare events data. We find that the transformer models outperform the bag-of-words approach, especially when fine tuned. None of the models beat human coding – but only in well-known contexts. Our results, however, suggest that the transformers do better than humans in less familiar contexts and that with additional training they can rapidly close the remaining gap to humans. We conclude by discussing the benefits and drawbacks of machine coding.</p>
-</section>
-<section id="presentations" class="level3">
-<h3 class="anchored" data-anchor-id="presentations">Presentations</h3>
-<section id="umd-methods-workshop-fall-2023" class="level4">
-<h4 class="anchored" data-anchor-id="umd-methods-workshop-fall-2023"><a href="https://github.com/gsa-gvpt/gvpt-methods/tree/de62edc60b0176ff0b6677e4511f951c9a837a53/usinggpt">UMD Methods Workshop (Fall 2023)</a></h4>
-<p>Do you research political events, including protests,&nbsp;mediation, voting, or sanctions? Our traditional method for collecting these events data involves reading thousands of news articles to extract the relevant information and put it into a dataset that we can use for our analysis. This process is very time-consuming and can be prone to error. Happily, advanced large language models, including GPT, can assist us. These models are easy to use in R and can be seamlessly&nbsp;integrated into your data collection process. I will step through how to use out-of-the-box GPT models in R to extract useful information from news articles. You can use these models to extract information from thousands of news articles in mere minutes.</p>
+<p>These posts include notes on my current research and reminders of how to do things in R.</p>
 
 
-</section>
-</section>
 
-</main> <!-- /main -->
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="RVJHTSUyQ05ldHdvcmslMjBhbmFseXNpcyUyQ01DTUMlMkNTaW11bGF0aW9u" data-listing-date-sort="1763528400000" data-listing-file-modified-sort="1763573951022" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="20" data-listing-word-count-sort="3864">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../blog/ERGMs_simulation.html" class="no-external">Fitting ERGMs to Real Networks</a>
+</h3>
+<div class="listing-subtitle">
+<a href="../blog/ERGMs_simulation.html" class="no-external">Using MCMC Simulation for Congressional Co-Sponsorship</a>
+</div>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('RVJHTQ=='); return false;">ERGM</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TmV0d29yayUyMGFuYWx5c2lz'); return false;">Network analysis</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TUNNQw=='); return false;">MCMC</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U2ltdWxhdGlvbg=='); return false;">Simulation</div>
+
+</div>
+</div>
+<div class="metadata">
+<a href="../blog/ERGMs_simulation.html" class="no-external">
+<div class="listing-date">
+Nov 19, 2025
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="RVJHTSUyQ05ldHdvcmslMjBhbmFseXNpcw==" data-listing-date-sort="1763442000000" data-listing-file-modified-sort="1763574144009" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3750">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../blog/intro_to_ERGM.html" class="no-external">Introduction to Exponential Random Graph Models</a>
+</h3>
+<div class="listing-subtitle">
+<a href="../blog/intro_to_ERGM.html" class="no-external">Understanding Network Structure with the Enemy’s Enemy Principle</a>
+</div>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('RVJHTQ=='); return false;">ERGM</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TmV0d29yayUyMGFuYWx5c2lz'); return false;">Network analysis</div>
+
+</div>
+</div>
+<div class="metadata">
+<a href="../blog/intro_to_ERGM.html" class="no-external">
+<div class="listing-date">
+Nov 18, 2025
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
